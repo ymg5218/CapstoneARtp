@@ -5,6 +5,7 @@
 // 설명: 인게임 씬 화면 구성 클래스
 // 수정:
 // - 이수민(2023-04-08) : 대규모 리팩토링(기능 수정, 통합, 재배치), 문서화 작업
+// - 이수민(2023-04-11) : 간단한 사용자 정보 UI 표시기능(최종 버전 아님), 간단한 미션 선택 UI 기능(최종 버전 아님)
 //--------------------------------------------------------------
 
 
@@ -29,13 +30,18 @@ public class InGameSceneManager : MonoBehaviour
 
     //--------------------------------------------------------------
     // 변수 리스트 :
+    // <유니티에서 세팅할 거>
+    // - _InGameSceneUI_User : 인게임 씬에서 사용할 사용자 정보 표시 UI
     // - _map : Mapbox 맵, 얘가 메인 배경이 될거임.
     // - _missionDataPath : 미션 데이터 저장 장소. Data 폴더안에 JSON 파일로 넣어두었음.
+    // <내부 변수>
     // - _missions : 미션 데이터가 저장되는 리스트
     // - _spawnObjects : 인게임에 스폰된 미션 포인트 리스트
     //--------------------------------------------------------------
+    [SerializeField] GameObject _InGameSceneUI_User;
     [SerializeField] AbstractMap _map;
     [SerializeField] string _missionDataPath;
+
     List<MissionData> _missions;
     List<GameObject> _spawnedObjects;
 
@@ -57,14 +63,15 @@ public class InGameSceneManager : MonoBehaviour
     //--------------------------------------------------------------
     void Start() {
         LoadMissionData();      // MissionDataSet에서 미션 정보 가져오기
-        SetUIComponent();       // 인게임 UI 세팅 메소드, 얘는 인게임 UI 작업하면서 적어나갈 예정임 ㅇㅇ
+        SetUIUser();            // 유저 데이터 표시 UI 세팅 메소드.
+        SetUIComponent();       // 인게임 UI 세팅 메소드.
         SpawnMissionObjects();  // 미션 오브젝트 생성
     }
 
 
     //--------------------------------------------------------------
     // 메소드명 : Update()
-    // 설명 : 미션 포인트 위치정보 수정
+    // 설명 : 지속적으로 미션 포인트 위치 정보 수정
     //--------------------------------------------------------------
     void Update() {
         for (int i = 0; i < _spawnedObjects.Count; i++)  {
@@ -89,11 +96,31 @@ public class InGameSceneManager : MonoBehaviour
 
 
     //--------------------------------------------------------------
+    // 메소드명 : SetUIUser()
+    // 설명 :
+    // - 화면 내 플레이어 정보 UI 세팅, 메인 씬 코드 그대로 들고 옴.
+    //--------------------------------------------------------------
+    private void SetUIUser() {
+        if (_InGameSceneUI_User.activeSelf) {
+            return;
+        }
+        _InGameSceneUI_User.SetActive(true);
+
+        Text[] Texts = _InGameSceneUI_User.GetComponentsInChildren<Text>();
+
+        Texts[0].text = StaticManager.PlayerData.userData.nickname;
+        Texts[1].text = StaticManager.PlayerData.userData.title;
+        Texts[2].text = "경험치 량 : " + StaticManager.PlayerData.userData.exp.ToString();
+        Texts[3].text = "돈 량 : " +StaticManager.PlayerData.userData.money.ToString();
+    }
+
+
+    //--------------------------------------------------------------
     // 메소드명 : SetUIComponent()
     // 설명 : 인게임 UI 세팅용 메소드.
     //--------------------------------------------------------------
     void SetUIComponent() {
-
+        // 지금은 공란, 나중에 뭐 추가할 지 생각해서 추가해보세요!
     }
 
 
@@ -127,14 +154,11 @@ public class InGameSceneManager : MonoBehaviour
     // 설명 : 터치된 미션 포인트에 해당하는 _mission 정보를 읽은 뒤, 해당하는 미니게임 씬으로 이동.
     //--------------------------------------------------------------
     void OnMissionObjectTouched(int index) {
-        // 일단은 바로 씬 전환이 되도록 설정.
-        // UIManager 다 만들면 여기에 추가적인 UI 세팅
-
         if (index >= 0 && index < _missions.Count) {
             var mission = _missions[index];
-            SceneLoader.LoadScene(mission.sceneName);    // 해당하는 씬으로 이동
+            StaticManager.PopUpUI.YesOrNoPopUp("선택된 미션은\n"+mission.sceneName+"에요. 미션을 플레이 하실건가요?",()=>{SceneLoader.LoadScene(mission.sceneName);}, ()=>{});
         } else {
-            Debug.LogError("잘못된 미션 오브젝트 인덱스에요. 뭐가 잘못됬는지 빨리 찾아보세요!: " + index);
+            StaticManager.PopUpUI.PopUp("미션 인덱스 관련해서 오류가 터졌어요.\n어디가 잘못된건지 얼른 찾아보세요!");
         }
     }
 }

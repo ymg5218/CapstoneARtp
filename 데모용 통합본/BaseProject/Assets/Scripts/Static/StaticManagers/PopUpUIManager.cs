@@ -28,25 +28,21 @@ public class PopUpUIManager : MonoBehaviour
     // - callbackOK : OK 버튼 콜백 처리용.
     // - callbackYES : YES 버튼 콜백 처리용.
     // - callbackNO : NO 버튼 콜백 처리용.
-    // <사용자 응답 처리>
-    // - DialogResponse : 사용자가 어떤 버튼을 갖다 눌렀는지 구분을 위한 열거자 정리
-    // - thisResult : 열거자 변수, 나중에 콜백할 때 연결하는 용도로 쓸 거임.
     // <유니티에서 세팅할 거>
-    // - Dialogs : 팝업창 프리팹, 여담이지만 아마 나중에 리스트화 시킬 것 같음.
+    // - Dialogs : 팝업창 프리팹
     // - Context : 팝업창 메시지
     // - OneButton : 확인 버튼. OKButton은 이름 겹쳐서 안됨.
     // - YesOrNoButton : 네/아니오 버튼
     // <내부 변수>
-    // - OKButton/YesButton/NoButton : 이름대로 ㅇㅇ
+    // - OKButton/YesButton/NoButton : 각 버튼 내부변수.
+    // - DialogResponse : 사용자가 어떤 버튼을 갖다 눌렀는지 구분을 위한 열거자 정리
+    // - thisResult : 열거자 변수, 나중에 콜백할 때 연결하는 용도로 사용함.
     //--------------------------------------------------------------
     public delegate void Callback();
     private Callback callbackOK = null;
     private Callback callbackYES = null;
     private Callback callbackNO = null;
 
-    public enum DialogResponse { OK, YES, NO, ERROR }
-    private DialogResponse thisResult;
-    
     [SerializeField] GameObject Dialogs;
     [SerializeField] GameObject Context;
     [SerializeField] GameObject OneButton;
@@ -55,6 +51,8 @@ public class PopUpUIManager : MonoBehaviour
     private Button OKButton;
     private Button YesButton;
     private Button NoButton;
+    public enum DialogResponse { OK, YES, NO, ERROR }
+    private DialogResponse thisResult;
     
 
     //--------------------------------------------------------------
@@ -167,6 +165,7 @@ public class PopUpUIManager : MonoBehaviour
         NoButton.interactable = false;
         Dialogs.SetActive(false);
     }
+
 
     //--------------------------------------------------------------
     // 메소드명 : SetCallback(Callback call, DialogResponse buttontype)

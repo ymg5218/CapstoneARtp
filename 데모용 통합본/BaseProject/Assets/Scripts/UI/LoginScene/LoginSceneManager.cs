@@ -5,6 +5,7 @@
 // 설명: 로그인 씬 화면 구성 클래스
 // 수정:
 // - 이수민(2023-04-07) : 문서화 작업, 마이너한 명칭 변경
+// - 이수민(2023-04-11) : 로그인/회원가입에서의 간단한 팝업 UI 적용(최종 버전 아님)
 //--------------------------------------------------------------
 
 
@@ -75,7 +76,7 @@ public class LoginSceneManager : MonoBehaviour
         _touchStartButton.GetComponent<Button>().onClick.AddListener(() => {
             Destroy(_touchStartButton);
             _touchStartButton = null;
-            SetButton();
+            SetButton();    // 버튼 세팅
         });
     }
 
@@ -114,6 +115,8 @@ public class LoginSceneManager : MonoBehaviour
         playerPW = _playerPWInput.GetComponent<InputField>().text;
         if (BackendLogin.Instance.LoginProcess(playerID,playerPW)) {
             StaticManager.PopUpUI.PopUp("로그인 성공",()=>{SceneLoader.LoadScene("MainScene");});
+        } else {
+            StaticManager.PopUpUI.PopUp("로그인 실패");
         }
     }
 
@@ -127,6 +130,10 @@ public class LoginSceneManager : MonoBehaviour
         string playerPW;
         playerID = _playerIDInput.GetComponent<InputField>().text;
         playerPW = _playerPWInput.GetComponent<InputField>().text;
-        BackendLogin.Instance.SignUpProcess(playerID,playerPW);
+        if (BackendLogin.Instance.SignUpProcess(playerID,playerPW)) {
+            StaticManager.PopUpUI.PopUp("회원가입 성공");
+        } else {
+            StaticManager.PopUpUI.PopUp("회원가입 실패");
+        }
     }
 }

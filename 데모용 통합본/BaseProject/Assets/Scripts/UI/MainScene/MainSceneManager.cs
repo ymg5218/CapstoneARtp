@@ -63,7 +63,6 @@ public class MainSceneManager : MonoBehaviour
     // 메소드명 : SetUIUser()
     // 설명 :
     // - 화면 좌상단 플레이어 정보 UI 세팅
-    // - 아마 나중에는 경험치량 같은건 바 형태로 따로 만들 것 같기도 함.
     //--------------------------------------------------------------
     private void SetUIUser() {
         if (_MainSceneUI_User.activeSelf) {
@@ -101,6 +100,7 @@ public class MainSceneManager : MonoBehaviour
         buttons[3].onClick.AddListener(GameQuit);
     }
 
+
     //--------------------------------------------------------------
     // 메소드명 : SetUISideButton()
     // 설명 : 화면 사이드의 아이콘 버튼 세팅
@@ -129,7 +129,7 @@ public class MainSceneManager : MonoBehaviour
     // - Challenge : 챌린지 버튼, 챌린지 씬 불러오기
     // - GameQuit : 게임 종료 버튼
     // <사이드 버튼 리스너>
-    // - Settings : 세팅 버튼, 일단은 플레이어 정보 수정을 수행함.
+    // - Settings : 세팅 버튼, 일단은 플레이어 정보 수정을 수행할 예정.
     //--------------------------------------------------------------
     private void GameStart(){
         SceneLoader.LoadScene("InGameScene");
