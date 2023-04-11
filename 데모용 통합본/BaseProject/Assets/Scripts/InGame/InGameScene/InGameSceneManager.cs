@@ -6,11 +6,13 @@
 // 수정:
 // - 이수민(2023-04-08) : 대규모 리팩토링(기능 수정, 통합, 재배치), 문서화 작업
 // - 이수민(2023-04-11) : 간단한 사용자 정보 UI 표시기능(최종 버전 아님), 간단한 미션 선택 UI 기능(최종 버전 아님)
+// - 이수민(2023-04-12) : 미션 데이터 위치 변경(아예 고정 시킬 목적)
 //--------------------------------------------------------------
 
 
 
 using UnityEngine;
+using UnityEngine.UI;
 using Mapbox.Utils;
 using Mapbox.Unity.Map;
 using Mapbox.Unity.MeshGeneration.Factories;
@@ -33,14 +35,17 @@ public class InGameSceneManager : MonoBehaviour
     // <유니티에서 세팅할 거>
     // - _InGameSceneUI_User : 인게임 씬에서 사용할 사용자 정보 표시 UI
     // - _map : Mapbox 맵, 얘가 메인 배경이 될거임.
-    // - _missionDataPath : 미션 데이터 저장 장소. Data 폴더안에 JSON 파일로 넣어두었음.
     // <내부 변수>
-    // - _missions : 미션 데이터가 저장되는 리스트
-    // - _spawnObjects : 인게임에 스폰된 미션 포인트 리스트
+    // - _missions : JSON에서 받아온 미션 데이터가 저장되는 리스트
+    // - _spawnedObjects : 인게임에 스폰된 미션 포인트 리스트
     //--------------------------------------------------------------
     [SerializeField] GameObject _InGameSceneUI_User;
     [SerializeField] AbstractMap _map;
-    [SerializeField] string _missionDataPath;
+
+    [System.Serializable]
+    public class MissionDataWrapper {
+        public List<MissionData> missions;
+    }
 
     List<MissionData> _missions;
     List<GameObject> _spawnedObjects;
@@ -90,8 +95,10 @@ public class InGameSceneManager : MonoBehaviour
     // 설명 : MissionDataSet에서 미션 정보 가져와서 _missions에 초기화 시킴.
     //--------------------------------------------------------------
     void LoadMissionData() {
-        string jsonString = File.ReadAllText(_missionDataPath); // JSON 파일 읽기
-        _missions = JsonUtility.FromJson<List<MissionData>>(jsonString); // JSON 데이터 파싱
+        string jsonString = File.ReadAllText("Assets/Resources/Settings/InGame/MissionDataSet.json"); // JSON 파일 읽기
+        MissionDataWrapper missionDataWrapper = JsonUtility.FromJson<MissionDataWrapper>(jsonString); // JSON 데이터 파싱
+
+        _missions = missionDataWrapper.missions;
     }
 
 
@@ -126,7 +133,7 @@ public class InGameSceneManager : MonoBehaviour
 
     //--------------------------------------------------------------
     // 메소드명 : SpawnMissionObjects()
-    // 설명 : _missions에 초기화된 미션 데이터를 활용하여, 인게임 상에서 미션 포인트를 생성함.
+    // 설명 : 에 초기화된 미션 데이터를 활용하여, 인게임 상에서 미션 포인트를 생성함.
     //--------------------------------------------------------------
     void SpawnMissionObjects() {
         _spawnedObjects = new List<GameObject>();
@@ -137,12 +144,10 @@ public class InGameSceneManager : MonoBehaviour
             instance.transform.localScale = new Vector3(mission.scale, mission.scale, mission.scale);
             _spawnedObjects.Add(instance);
 
-            // 미션 오브젝트에 터치 이벤트 리스너 추가
-            instance.GetComponent<MeshRenderer>().enabled = false;
             int index = i;
-            instance.GetComponentInChildren<Collider>().enabled = true; // Collider를 통해 터치 이벤트 감지
-            instance.GetComponentInChildren<Collider>().isTrigger = true; // Collider를 트리거로 설정하여 터치 이벤트를 감지하도록 함
-            instance.GetComponentInChildren<Collider>().gameObject.AddComponent<MissionObjectTouchHandler>().OnTouch += () => OnMissionObjectTouched(index);
+            var collider = instance.AddComponent<BoxCollider>();
+            collider.isTrigger = true;
+            instance.AddComponent<MissionObjectTouchHandler>().OnTouch += () => OnMissionObjectTouched(index);
         }
     }
 
