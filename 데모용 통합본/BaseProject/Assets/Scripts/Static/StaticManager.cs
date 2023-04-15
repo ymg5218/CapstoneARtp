@@ -24,7 +24,6 @@ public class StaticManager : MonoBehaviour
     // - PlayerData : 플레이어 데이터 관리
     //--------------------------------------------------------------
     public static StaticManager Instance { get; private set; }
-
     public static BackendManager Backend { get; private set; }
     public static PopUpUIManager PopUpUI { get; private set; }
     public static PlayerDataManager PlayerData { get; private set; }
