@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 660911240, guid: f624596d5fe1bd5459a5da424a8abc1b, type: 3}
   m_Name: TheBackendSettings
   m_EditorClassIdentifier: 
-  clientAppID: 2eda0390-b29e-11ed-a8bc-7b0b05aed91a4566
-  signatureKey: 2eda2aa0-b29e-11ed-a8bc-7b0b05aed91a4566
+  clientAppID: c1f960d0-c568-11ed-90c3-9f747bb3072f4631
+  signatureKey: c1f960d1-c568-11ed-90c3-9f747bb3072f4631
   functionAuthKey: 
-  packageName: com.DefaultCompany.demo
+  packageName: com.DefaultCompany.BaseProject
   isAllPlatform: 1
   sendLogReport: 1
   rateCountActive: 0
