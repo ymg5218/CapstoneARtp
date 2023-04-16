@@ -15,7 +15,7 @@ MonoBehaviour:
   clientAppID: 2eda0390-b29e-11ed-a8bc-7b0b05aed91a4566
   signatureKey: 2eda2aa0-b29e-11ed-a8bc-7b0b05aed91a4566
   functionAuthKey: 
-  packageName: com.DefaultCompany.demo
+  packageName: com.TuKS5_6.demo
   isAllPlatform: 1
   sendLogReport: 1
   rateCountActive: 0
@@ -24,5 +24,5 @@ MonoBehaviour:
   autoRefreshToken: 1
   retryWhenClientRequestFailError: 1
   retryWhenServerError: 1
-  retryWhenBadSignatureError: 1
+  retryWhenBadSignatureError: 0
   initFailWhenDeviceIdUnknown: 1
