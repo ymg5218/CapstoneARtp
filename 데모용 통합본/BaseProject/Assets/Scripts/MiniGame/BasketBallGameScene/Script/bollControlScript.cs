@@ -6,17 +6,15 @@ using UnityEngine.XR.ARFoundation;
 [RequireComponent(typeof(Rigidbody))]
 public class bollControlScript : MonoBehaviour
 {
-    //this is the force of the throw
+    //던지는 힘
     public float m_Throwforce = 100f;
 
-    //X and Y axis damping factors for the throw  direction 
+    //던지는 방향 
     public float m_ThrowDirectionX = 0.17f;
     public float m_ThrowDirectionY = 0.67f;
 
-    //offset of the ball position in relation to camera's position 
     public Vector3 m_BallCameraOffset = new Vector3(0f, -0.4f, 1f);
 
-    //The following variables contain the state of the current throw 
     private Vector3 StartPosition;
     private Vector3 direction;
     private float StartTime;
@@ -44,15 +42,13 @@ public class bollControlScript : MonoBehaviour
 
     public void Update()
     {
-        //we will start the touch of the screen,which will start the ball throw
-        if (Input.GetMouseButtonDown(0)) // run for mouse click as well as mobile touch 
+        if (Input.GetMouseButtonDown(0))
         {
             StartPosition = Input.mousePosition;
             StartTime = Time.time;
             throwStarted = true;
             directionChosen = false;
         }
-        // we have ended the touch of the screen, which will throw the ball 
         else if (Input.GetMouseButtonUp(0)) 
         {
             endTime = Time.time;
@@ -81,7 +77,7 @@ public class bollControlScript : MonoBehaviour
             directionChosen = false;
         }
 
-        //5 sec after throwing the ball we reset its location 
+        //5초 후 위치 리셋
         if (Time.time - endTime >= 5 && Time.time - endTime<=6)
             ResetBall();
     }
