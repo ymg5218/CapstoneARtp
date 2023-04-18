@@ -5,7 +5,7 @@
 // 설명: 
 // - 화면에 풍선을 지속적으로 깔아주는 클래스.
 // 수정 :
-// - 이수민(2023-04-18) : 코드 문서화, 마이너한 변경(기존 Start를 트리거 형태로 바꿈)
+// - 이수민(2023-04-18) : 코드 문서화, 마이너한 변경
 //--------------------------------------------------------------
 
 
@@ -13,7 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnBalloons : MonoBehaviour {
+public class BalloonSpawner : MonoBehaviour {
     //--------------------------------------------------------------
     // 변수 리스트 :
     // <유니티 설정>
@@ -30,12 +30,10 @@ public class SpawnBalloons : MonoBehaviour {
 
 
     //--------------------------------------------------------------
-    // 메소드명 : StartSpawning()
-    // 설명 : 풍선 오브젝트 생성을 시작하는 트리거 메소드
-    // 수정 :
-    // - 이수민(2023-04-18) : 점수 제어를 위해서 트리거 형태로 바꿈.
+    // 메소드명 : Start()
+    // 설명 : 풍선 오브젝트 생성을 시작하는 메소드
     // --------------------------------------------------------------
-    public void StartSpawning() {
+    public void Start() {
         StartCoroutine(SpawnBalloon());
     }
 

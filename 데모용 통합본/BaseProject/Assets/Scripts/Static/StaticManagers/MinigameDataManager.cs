@@ -74,33 +74,6 @@ public class MinigameDataManager : MonoBehaviour
     }
 
 
-    // --------------------------------------------------------------
-    // 함수명 : SetGameResult()
-    // 입력 :
-    // - minigameName : 수행한 미니게임 이름, 그쪽 미니게임 매니저에 의해 호출될 예정
-    // - score : 해당 미니게임 세션에서 얻어낸 플레이어의 점수
-    // 설명 : 
-    // - 접근한 미니게임의 관리 매니저에 의해 SetRankData()가 미리 수행되어 있음을 전제로 함.
-    // - 자기가 수행한 미니게임 정보(일단은 점수만)를 테이블에 등록하는 클래스.
-    // - 추가적으로 기존 랭킹 데이터가 없거나(null), 기존 최고 점수보다 높은 점수를 얻으면 랭킹 갱신
-    // 수정 : 
-    // - 이수민(2023-04-17) : 마이너한 설계 변경(매개변수)
-    // --------------------------------------------------------------
-    public void SetGameResult(int score) {
-        Param param = new Param();
-        param.Add("점수", score);
-        // 일단 등록함.
-        Backend.GameData.Insert(tableName, param);
-
-        if (last_score == null || score >= Int32.Parse(last_score)) {
-            RankUpdate(score);
-            Debug.Log("최고 score로 갱신됨");
-        } else {
-            Debug.Log("이전 점수보다 낮아 랭킹 등록 X");
-        }
-    }
-
-
     //--------------------------------------------------------------
     // 메소드명 : GetRankData()
     // 입력 :
@@ -154,6 +127,34 @@ public class MinigameDataManager : MonoBehaviour
             Debug.LogError("랭크 데이터 호출 실패");
         }
     }
+
+
+    // --------------------------------------------------------------
+    // 함수명 : SetGameResult()
+    // 입력 :
+    // - minigameName : 수행한 미니게임 이름, 그쪽 미니게임 매니저에 의해 호출될 예정
+    // - score : 해당 미니게임 세션에서 얻어낸 플레이어의 점수
+    // 설명 : 
+    // - 접근한 미니게임의 관리 매니저에 의해 SetRankData()가 미리 수행되어 있음을 전제로 함.
+    // - 자기가 수행한 미니게임 정보(일단은 점수만)를 테이블에 등록하는 클래스.
+    // - 추가적으로 기존 랭킹 데이터가 없거나(null), 기존 최고 점수보다 높은 점수를 얻으면 랭킹 갱신
+    // 수정 : 
+    // - 이수민(2023-04-17) : 마이너한 설계 변경(매개변수)
+    // --------------------------------------------------------------
+    public void SetGameResult(int score) {
+        Param param = new Param();
+        param.Add("점수", score);
+        // 일단 등록함.
+        Backend.GameData.Insert(tableName, param);
+
+        if (last_score == null || score >= Int32.Parse(last_score)) {
+            RankUpdate(score);
+            Debug.Log("최고 score로 갱신됨");
+        } else {
+            Debug.Log("이전 점수보다 낮아 랭킹 등록 X");
+        }
+    }
+
 
 
     // --------------------------------------------------------------
