@@ -37,7 +37,7 @@ public class BalloonShooter : MonoBehaviour {
             if(hit.transform.tag == "Balloon") {
                 Destroy(hit.transform.gameObject);
                 Instantiate(smoke, hit.point, Quaternion.LookRotation(hit.normal));
-                //점수 올리는 거
+                ShootingGameSceneManager.Instance.IncreaseScore();
             }
         }
     }

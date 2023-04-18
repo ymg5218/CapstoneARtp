@@ -4,10 +4,9 @@
 // 작성일: 2023-04-18
 // 설명: 
 // - 풍선 사격 게임을 관리하는 미니게임 관리 클래스.
-// - 게임 점수 관리, 랭킹 등록등의 작업을 수행함.
+// - 화면 구성, 게임 점수 관리, 랭킹 등록등의 작업을 수행함.
 // <사용 약어 정리>
 // - MDM : MinigameDataManager
-// 수정 :
 //--------------------------------------------------------------
 
 
@@ -34,7 +33,9 @@ public class ShootingGameSceneManager : MonoBehaviour {
     // - score : 해당 세션에서 얻은 점수 보관용 변수.
     //--------------------------------------------------------------
     [SerializeField] Text result;
+
     int score = 0;
+    BalloonSpawner balloonSpawner;
 
 
     //--------------------------------------------------------------
@@ -52,58 +53,46 @@ public class ShootingGameSceneManager : MonoBehaviour {
     // 메소드명 : GameInit()
     // 설명 : 
     // - 게임 시작을 위한 기본적인 밑작업을 수행하는 구간
-    // - MDM과 통신하여 기본적인 랭킹 정보를 세팅하는 등의 일을 함.
+    // - MDM과 통신하여 기본적인 랭킹 정보를 세팅하고, 기타 게임의 UI를 세팅하는 일을 함.
+    // - 일단은 게임 시작 버튼 누르면 발동하도록 세팅해두긴 했는데, 나중에 더 좋은 방법 있으면 바뀔 수도 있음.
     //--------------------------------------------------------------
     void GameInit() {        
-        /*
-        MinigameDataManager minigameData;
-        public string _lastScore;
-        void Start()
-        {
-            // MinigameDataManager 클래스의 객체를 통해 현재 진행중인 미니게임(씬) 이름을 ShootingGameScene으로 수정
-            minigameData = new MinigameDataManager("ShootingGameScene");
-            // ShootingGame 랭킹의 최고점수 받아놓음
-            _lastScore = minigameData.GetMyRankData();
-            
-        }
-
-        //--------------------------------------------------------------
-        // 임시로 버튼 누르면 점수 잘 작동하나 보려고 만듬.
-        // --------------------------------------------------------------
-        public void ButtonClick()
-        {
-            minigameData.MyRankUpdate(_lastScore);   
-        }
-        */
+        StaticManager.MinigameData.SetRankData("ShootingGameScene");
+        //UI 세팅 코드 집어넣기.
+        StartGame();
     }
 
 
     //--------------------------------------------------------------
-    // 메소드명 : GameInit()
+    // 메소드명 : StartGame()
     // 설명 : 
     // - 실질적인 게임 제어 작업이 들어가는 공간.
+    // - 나중에는 타이머로 시간을 제어하거나, 하는 제어 코드가 들어갈 수 있음.
     //--------------------------------------------------------------
-    void StartGame() {        
+    void StartGame() {
+        balloonSpawner = new BalloonSpawner();
+        balloonSpawner.StartSpawning();
     }
 
 
     //--------------------------------------------------------------
     // 메소드명 : RegisterGameScore()
     // 설명 : 
-    // - 게임 완료시 호출되어, 해당 세션에서의 미니게임 결과를 MDM에.
-    // - MinigameDataManager와 통신하여 기본적인 랭킹 정보를 세팅하고, 게임 제어 변수들을 초기화함.
+    // - 게임 완료시 호출되어, 해당 세션에서의 미니게임 결과를 MDM에 세팅하는 변수.
+    // - 지금은 인게임 화면에서 점수 저장 버튼으로 동작하도록 만들었지만, 나중에는 StartGame의 타이머 트리거등으로 자동으로 호출되도록 변경할 수도 있음.
     //--------------------------------------------------------------
     void RegisterGameScore() {
+        StaticManager.MinigameData.SetGameResult(score);   
     }
 
 
     //--------------------------------------------------------------
-    // 메소드명 : RegisterGameScore()
+    // 메소드명 : IncreaseScore()
     // 설명 : 
-    // - 게임 완료시 호출되어, 해당 세션에서의 미니게임 결과를 MDM에.
-    // - MinigameDataManager와 통신하여 기본적인 랭킹 정보를 세팅하고, 게임 제어 변수들을 초기화함.
+    // - 점수를 올리는 메소드
+    // - 나중에는 터트린 풍선 데이터를 매개변수로 받아서, 금색 풍선의 경우 +200점 형태로 구현할 수도 있을 듯??? "아님 말고"
     //--------------------------------------------------------------
     public void IncreaseScore() {
-        
+        score += 100;
     }
 }

@@ -74,6 +74,33 @@ public class MinigameDataManager : MonoBehaviour
     }
 
 
+    // --------------------------------------------------------------
+    // 함수명 : SetGameResult()
+    // 입력 :
+    // - minigameName : 수행한 미니게임 이름, 그쪽 미니게임 매니저에 의해 호출될 예정
+    // - score : 해당 미니게임 세션에서 얻어낸 플레이어의 점수
+    // 설명 : 
+    // - 접근한 미니게임의 관리 매니저에 의해 SetRankData()가 미리 수행되어 있음을 전제로 함.
+    // - 자기가 수행한 미니게임 정보(일단은 점수만)를 테이블에 등록하는 클래스.
+    // - 추가적으로 기존 랭킹 데이터가 없거나(null), 기존 최고 점수보다 높은 점수를 얻으면 랭킹 갱신
+    // 수정 : 
+    // - 이수민(2023-04-17) : 마이너한 설계 변경(매개변수)
+    // --------------------------------------------------------------
+    public void SetGameResult(int score) {
+        Param param = new Param();
+        param.Add("점수", score);
+        // 일단 등록함.
+        Backend.GameData.Insert(tableName, param);
+
+        if (last_score == null || score >= Int32.Parse(last_score)) {
+            RankUpdate(score);
+            Debug.Log("최고 score로 갱신됨");
+        } else {
+            Debug.Log("이전 점수보다 낮아 랭킹 등록 X");
+        }
+    }
+
+
     //--------------------------------------------------------------
     // 메소드명 : GetRankData()
     // 입력 :
@@ -83,7 +110,7 @@ public class MinigameDataManager : MonoBehaviour
     // 수정 : 
     // - 이수민(2023-04-17) : 마이너한 설계 변경 및 메소드 분할(SetRankData)
     //--------------------------------------------------------------
-    private void GetRankData(string tableName, string rankUUID) {
+    void GetRankData(string tableName, string rankUUID) {
         // 테이블 데이터 가져오기. 최종적으로 플레이어의 랭킹정보를 가져옴
         var bro = Backend.GameData.Get(tableName, new Where(), 1);
 
@@ -130,39 +157,12 @@ public class MinigameDataManager : MonoBehaviour
 
 
     // --------------------------------------------------------------
-    // 함수명 : SetGameResult()
-    // 입력 :
-    // - minigameName : 수행한 미니게임 이름, 그쪽 미니게임 매니저에 의해 호출될 예정
-    // - score : 해당 미니게임 세션에서 얻어낸 플레이어의 점수
-    // 설명 : 
-    // - 접근한 미니게임의 관리 매니저에 의해 SetRankData()가 미리 수행되어 있음을 전제로 함.
-    // - 자기가 수행한 미니게임 정보(일단은 점수만)를 테이블에 등록하는 클래스.
-    // - 추가적으로 기존 랭킹 데이터가 없거나(null), 기존 최고 점수보다 높은 점수를 얻으면 랭킹 갱신
-    // 수정 : 
-    // - 이수민(2023-04-17) : 마이너한 설계 변경(매개변수)
-    // --------------------------------------------------------------
-    public void SetGameResult(int score) {
-        Param param = new Param();
-        param.Add("점수", score);
-        // 일단 등록함.
-        Backend.GameData.Insert(tableName, param);
-
-        if (last_score == null || score >= Int32.Parse(last_score)) {
-            RankUpdate(score);
-            Debug.Log("최고 score로 갱신됨");
-        } else {
-            Debug.Log("이전 점수보다 낮아 랭킹 등록 X");
-        }
-    }
-
-
-    // --------------------------------------------------------------
     // 메소드명 : RankUpdate()
     // 입력 :
     // - score : 랭킹에 등록하려는 점수
     // 설명 : MyRankUpdate() 하위 메소드. 랭킹에 등록 가능한 상황이라, 얻은 점수를 랭킹에 등록할 때 작동
     // --------------------------------------------------------------
-    public void RankUpdate(int score) {
+    void RankUpdate(int score) {
         string rowInDate = string.Empty;
         // 랭킹을 삽입하기 위해서는 게임 데이터에서 사용하는 데이터의 inDate값이 필요합니다.
         // 따라서 데이터를 불러온 후, 해당 데이터의 inDate값을 추출하는 작업을 해야합니다.
