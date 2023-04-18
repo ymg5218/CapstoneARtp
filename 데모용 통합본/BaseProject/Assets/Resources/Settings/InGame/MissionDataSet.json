@@ -8,7 +8,7 @@
             "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle"
         },
         {
-            "sceneName" : "BasketballGameScene",
+            "sceneName" : "CarGameScene",
             "latitude": 37.340028,
             "longitude": 126.734696,
             "scale": 4,
