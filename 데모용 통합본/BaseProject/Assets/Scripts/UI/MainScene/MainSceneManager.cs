@@ -24,7 +24,6 @@ public class MainSceneManager : MonoBehaviour
         }
     }
     
-
     //--------------------------------------------------------------
     // 변수 리스트 :
     // - _MainSceneUI_MainButton : 대표버튼 4개.
