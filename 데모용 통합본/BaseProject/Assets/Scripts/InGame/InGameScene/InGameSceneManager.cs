@@ -8,6 +8,7 @@
 // - 이수민(2023-04-11) : 간단한 사용자 정보 UI 표시기능(최종 버전 아님), 간단한 미션 선택 UI 기능(최종 버전 아님)
 // - 이수민(2023-04-12) : 미션 데이터 위치 변경(Resource/Settings/InGame안에 있음.)
 // - 이수민(2023-04-19) : Start() 제거
+// - 이수민(2023-04-19) : JSON 파일 불러오는 방식 변경(안드로이드의 경우 추가)
 //--------------------------------------------------------------
 
 
@@ -20,6 +21,7 @@ using Mapbox.Unity.MeshGeneration.Factories;
 using Mapbox.Unity.Utilities;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.Networking;
 
 public class InGameSceneManager : MonoBehaviour
 {
@@ -96,9 +98,19 @@ public class InGameSceneManager : MonoBehaviour
     // 설명 : MissionDataSet에서 미션 정보 가져와서 _missions에 초기화 시킴.
     //--------------------------------------------------------------
     void LoadMissionData() {
-        string jsonString = File.ReadAllText("Assets/Resources/Settings/InGame/MissionDataSet.json"); // JSON 파일 읽기
-        MissionDataWrapper missionDataWrapper = JsonUtility.FromJson<MissionDataWrapper>(jsonString); // JSON 데이터 파싱
+        string filePath = Path.Combine(Application.streamingAssetsPath, "MissionDataSet.json");
+        string jsonString;
+        if (Application.platform == RuntimePlatform.Android) {
+            UnityWebRequest www = UnityWebRequest.Get(filePath);
+            www.SendWebRequest();
+            while (!www.isDone) { }
+            jsonString = www.downloadHandler.text;
+        }else {
+            // Android 이외의 플랫폼에서는 File 클래스를 사용하여 파일을 읽어옵니다.
+            jsonString = File.ReadAllText(filePath);
+        }   
 
+        MissionDataWrapper missionDataWrapper = JsonUtility.FromJson<MissionDataWrapper>(jsonString); // JSON 데이터 파싱
         _missions = missionDataWrapper.missions;
     }
 
