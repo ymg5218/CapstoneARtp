@@ -13,6 +13,13 @@
             "longitude": 126.734696,
             "scale": 4,
             "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle 2"
+        },
+        {
+            "sceneName" : "ShootingGameScene",
+            "latitude": 37.341228,
+            "longitude": 126.732975,
+            "scale": 4,
+            "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle"
         }
     ]
 }  
