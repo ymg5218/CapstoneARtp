@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Minigame/CarGameScene.unity
     guid: 1c8fcebf6b032de45be22e4c17f83a58
+  - enabled: 1
+    path: Assets/Scenes/Minigame/hoop.unity
+    guid: e594c3c8aa74f2e459b43dbb56d38960
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: da2a480113b7a0e4caf600bcd2348a82,
       type: 2}

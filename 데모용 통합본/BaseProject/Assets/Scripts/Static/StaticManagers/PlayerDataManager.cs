@@ -69,7 +69,7 @@ public class PlayerDataManager : MonoBehaviour
     public void GameDataInit(){
         Debug.Log("데이터 초기화.");
         userData.nickname = "NKYL";
-        userData.title = "졸업하고 싶으면 개추ㅋㅋ";
+        userData.title = "졸업하고 싶다 ㅋㅋ";
         userData.exp = 0;
         userData.money = 0;
     }
