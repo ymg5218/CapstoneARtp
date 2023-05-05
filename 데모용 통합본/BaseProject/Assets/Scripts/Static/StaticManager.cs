@@ -31,6 +31,7 @@ public class StaticManager : MonoBehaviour
     public static PopUpUIManager PopUpUI { get; private set; }
     public static PlayerDataManager PlayerData { get; private set; }
     public static MinigameDataManager MinigameData { get; private set; }
+    public static MatchingManager Matching { get; private set; }
 
 
     void Awake() {
@@ -56,10 +57,12 @@ public class StaticManager : MonoBehaviour
         PopUpUI = GetComponentInChildren<PopUpUIManager>();
         PlayerData = GetComponentInChildren<PlayerDataManager>();
         MinigameData = GetComponentInChildren<MinigameDataManager>();
+        Matching = GetComponentInChildren<MatchingManager>();
 
         Backend.Init();
         PopUpUI.Init();
         PlayerData.Init();
         MinigameData.Init();
+        Matching.Init();
     }
 }

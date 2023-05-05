@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 
-// "원래는" 이거 private 시켜놔야 되는데, 지금은 public으로 해놨음. 나중에 빼놓지 말고 바꿔두기
     public class RankItem {
         //--------------------------------------------------------------
         // 변수 리스트 :

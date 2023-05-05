@@ -27,5 +27,6 @@ public class MissionData {
     public double latitude;
     public double longitude;
     public float scale;
+    public string matchingInfo;
     public string prefabPath;
 }

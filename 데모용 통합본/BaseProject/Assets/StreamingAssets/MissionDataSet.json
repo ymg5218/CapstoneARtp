@@ -5,6 +5,7 @@
             "latitude": 37.339642,
             "longitude": 126.734515,
             "scale": 4,
+	"matchingInfo" : 2023-05-04T10:42:22.665Z,
             "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle 2"
         },
         {
@@ -12,6 +13,7 @@
             "latitude": 37.340028,
             "longitude": 126.734696,
             "scale": 4,
+	"matchingInfo" : None,
             "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle 2"
         },
         {
@@ -19,6 +21,7 @@
             "latitude": 37.339836,
             "longitude": 126.734651,
             "scale": 4,
+	"matchingInfo" : None,
             "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle"
         }
     ]
