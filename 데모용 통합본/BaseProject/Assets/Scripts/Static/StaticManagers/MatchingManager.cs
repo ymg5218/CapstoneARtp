@@ -17,8 +17,18 @@ using Battlehub.Dispatcher;
 using System.Linq;
 
 public class MatchingManager : MonoBehaviour {
+    //--------------------------------------------------------------
+    // 변수 리스트 :
+    // <내부 변수> :
+    // - errorInfo : 이벤트 처리 결과값 저장용 변수
+    // - matchInfos : 서버에서 생성된 매치 데이터 저장용 리스트.
+    // - nowMatchInfo : "현재" 매칭를 시도하는 미니게임의 매칭 정보
+    //--------------------------------------------------------------
+    ErrorInfo errorInfo;
     public List<MatchInfo> matchInfos = new List<MatchInfo>();
     MatchInfo nowMatchInfo = new MatchInfo();
+
+
 
     //--------------------------------------------------------------
     // 메소드명 : Init()
@@ -32,8 +42,8 @@ public class MatchingManager : MonoBehaviour {
     
 
     //--------------------------------------------------------------
-    // 메소드명 : Init()
-    // 설명 : Poll함수 지속적인 콜
+    // 메소드명 : Update()
+    // 설명 : Poll함수를 지속적으로 콜하며, 스택된 메시지를 서버로 전송
     //--------------------------------------------------------------
     void Update() {
         Backend.Match.Poll();
@@ -44,7 +54,6 @@ public class MatchingManager : MonoBehaviour {
     // 설명 : 매칭 서버 접속
     //--------------------------------------------------------------
     void JoinMatchMakingServer() {
-        ErrorInfo errorInfo;
         Backend.Match.JoinMatchMakingServer(out errorInfo);
     }
 
@@ -54,7 +63,7 @@ public class MatchingManager : MonoBehaviour {
     // 설명 : 콘솔에 생성된 매칭 정보 가져오기.
     //--------------------------------------------------------------
     void GetMatchList() {
-        // 매칭 카드 정보 초기화
+        // 매칭 정보 초기화
         matchInfos.Clear();
 
         Backend.Match.GetMatchList(callback => {
@@ -151,6 +160,7 @@ public class MatchingManager : MonoBehaviour {
         };
         Backend.Match.OnSessionListInServer += (args) => {
              // 게임방 유저 정보 수신
+             // 리스트 초기화 코드
              // 간단하게 ID만 받아서, 내부 클래스에 정리하고 리스트로 관리
         };
         Backend.Match.OnMatchInGameStart = () => {
@@ -159,6 +169,7 @@ public class MatchingManager : MonoBehaviour {
         };
         Backend.Match.OnMatchRelay += (args) => {
             // 바이너리 데이터 처리
+            // 얘를 미니게임 매니저 안에다 쳐 넣어야 하나??
             // 아마 사격이
             //      1. 씬 전환 끝나자 마자 3초 세고 30초 동안 풍선 사격
             //      2. 30초 이후에는 강제적으로 점수 데이터를 서버에 보내고, 인게임 팝업 띄워서(잠시 ㄱㄷ리셈) 터치 막아내기.

@@ -39,6 +39,8 @@ public class MinigameDataManager : MonoBehaviour
     string rankUUID;
     string last_score;
 
+
+
     //--------------------------------------------------------------
     // 메소드명 : Init()
     // 설명 : 초기화 작업. 일단 지금은 공란임.
