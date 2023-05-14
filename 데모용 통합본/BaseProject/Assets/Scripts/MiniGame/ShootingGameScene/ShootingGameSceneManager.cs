@@ -4,9 +4,10 @@
 // 작성일: 2023-04-18
 // 설명: 
 // - 풍선 사격 게임을 관리하는 미니게임 관리 클래스.
-// - 화면 구성, 게임 점수 관리, 랭킹 등록등의 작업을 수행함.
+// - 화면 구성, 게임 점수 관리, 랭킹 등록, 매칭 제어등의 작업을 수행함.
 // <사용 약어 정리>
 // - MDM : MinigameDataManager
+// - MM : MatchingManager
 //--------------------------------------------------------------
 
 
@@ -15,6 +16,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using BackEnd;
+using BackEnd.Tcp;
 
 public class ShootingGameSceneManager : MonoBehaviour {
     // 자체 인스턴스
@@ -35,6 +37,7 @@ public class ShootingGameSceneManager : MonoBehaviour {
     // - BalloonShooter/BalloonSpawner : ㅇㅇ
     // <내부 변수>
     // - score : 해당 세션에서 얻은 점수 보관용 변수.
+    // - id : 플레이어 닉네임. 서버와의 통신에서 사용할 예정.
     //--------------------------------------------------------------
     [SerializeField] GameObject UI;
     [SerializeField] Text scoreText;
@@ -44,6 +47,7 @@ public class ShootingGameSceneManager : MonoBehaviour {
     [SerializeField] GameObject BalloonSpawner;
 
     int score = 0;
+    string id = "(-)";
 
 
     //--------------------------------------------------------------
@@ -57,57 +61,108 @@ public class ShootingGameSceneManager : MonoBehaviour {
     }
 
 
+
+    //--------------------------------------------------------------
+    // 메소드명 : OnEnable()
+    // 설명 : 
+    // - 미니게임 접근 시, 동작시킬 메소드 순서 정의
+    // - 우선은 다음과 같이 구성됨.
+    //      1. GameInit(기본적인 핸들러, UI 세팅)
+    //      2. StartGame(본격적인 게임 시작)
+    //--------------------------------------------------------------
+    public void OnEnable() {        
+        GameInit();
+        GameStartS();
+    }
+
+
+
     //--------------------------------------------------------------
     // 메소드명 : GameInit()
     // 설명 : 
     // - 게임 시작을 위한 기본적인 밑작업을 수행하는 구간
-    // - MDM과 통신하여 기본적인 랭킹 정보를 세팅하고, 기타 게임의 UI를 세팅하는 일을 함.
-    // - 일단은 게임 시작 버튼 누르면 발동하도록 세팅해두긴 했는데, 나중에 더 좋은 방법 있으면 바뀔 수도 있음.
+    //      1. MDM과 통신하여 기본적인 랭킹 정보를 세팅
+    //      2. 매칭 관련 핸들러 세팅.
+    //      3. 내부 변수(점수, ID) 초기화
+    //      4. 게임의 UI를 세팅.
     //--------------------------------------------------------------
     public void GameInit() {        
         StaticManager.MinigameData.SetRankData("ShootingGameScene");
+        MatchMakingHandler();
 
-        //내부 점수 초기화.
-        score = 100;
+        //내부 변수 초기화.
+        score = 0;
+        id = StaticManager.PlayerData.userData.nickname;
+        // 리스트 초기화 코드
+        // 현재 MM의 리스트 데이터를 가져와, 랭킹창 업데이트.
+
         //UI 세팅
-        GameStartButton.SetActive(false);
+        GameStartButton.SetActive(false); // 이새끼 삭제해야 함.
         UI.SetActive(true);
 
         BalloonShooter.SetActive(true);
         BalloonSpawner.SetActive(true);
-        StartGame();
     }
 
 
     //--------------------------------------------------------------
-    // 메소드명 : StartGame()
+    // 메소드명 : GameStart()
     // 설명 : 
     // - 실질적인 게임 제어 작업이 들어가는 공간.
-    // - 나중에는 타이머로 시간을 제어하거나, 하는 제어 코드가 들어갈 수 있음.
+    //      1. 5초 카운팅
+    //      2. 게임UI/벌룬스포너/벌룬슈터 활성화
+    //      3. 
     //--------------------------------------------------------------
-    void StartGame() {
+    void GameStart() {
     }
 
 
     //--------------------------------------------------------------
-    // 메소드명 : RegisterGameScore()
+    // 메소드명 : GameEnd()
     // 설명 : 
-    // - 게임 완료시 호출되어, 해당 세션에서의 미니게임 결과를 MDM에 세팅하는 변수.
-    // - 지금은 인게임 화면에서 점수 저장 버튼으로 동작하도록 만들었지만, 나중에는 StartGame의 타이머 트리거등으로 자동으로 호출되도록 변경할 수도 있음.
+    // - 30초 만료시 강제로 호출되는 메소드.
+    //      1. 일단 화면에 멈춰! UI 삽입
+    //      2. 서버에게 ID+END 메시지 전달
+    //      3. 브로드캐스팅 된 데이터를 활용하여 랭킹을 표시함
+    //      4. 서버로 게임 종료 메시지 전달 후 인게임 씬으로 탈출
     //--------------------------------------------------------------
-    public void RegisterGameScore() {
-        StaticManager.MinigameData.SetGameResult(score);
+    public void GameEnd() {
+        // 멈추기 UI 띄우기
+        
+        // 서버에 END 메시지 전달
+
     }
+
 
 
     //--------------------------------------------------------------
     // 메소드명 : IncreaseScore()
     // 설명 : 
     // - 점수를 올리는 메소드
-    // - 나중에는 터트린 풍선 데이터를 매개변수로 받아서, 금색 풍선의 경우 +200점 형태로 구현할 수도 있을 듯??? "아님 말고"
+    // - 터트리는 대로 서버에 닉네임+현재 점수를 전달하여, 각 클라이언트에 브로드캐스팅하여 실시간으로 점수판 갱신
     //--------------------------------------------------------------
     public void IncreaseScore() {
         score += 100;
         scoreText.text = "점수 : " + score.ToString();
+        // 여기에 서버로 닉네임+현재 점수를 통신하는 코드를 삽입할 것.
+    }
+
+
+
+    //--------------------------------------------------------------
+    // 메소드명 : MatchMakingHandler()
+    // 설명 : 매칭 관련 이벤트 핸들러
+    //--------------------------------------------------------------
+    private void MatchMakingHandler() {
+        Backend.Match.OnMatchRelay += (args) => {
+            // 바이너리 데이터 처리
+            // 1. 점수 갱신(누가 점수 올린거 감지하자마자, 각 클라의 MM에서 받아 처리한 뒤, 랭킹창 업데이트 함수 호출)
+            // 2. END 메시지 획득시 카운팅. 카운팅=리스트 크기 시 랭킹창 보여주고 게임 마무리한뒤 인게임 씬으로 사출
+            
+            // 게임 마무리
+            StaticManager.MinigameData.SetGameResult(score);
+
+            SceneLoader.LoadScene("InGameScene");
+        };
     }
 }

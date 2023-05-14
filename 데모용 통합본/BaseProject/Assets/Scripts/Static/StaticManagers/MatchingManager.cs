@@ -28,6 +28,8 @@ public class MatchingManager : MonoBehaviour {
     public List<MatchInfo> matchInfos = new List<MatchInfo>();
     MatchInfo nowMatchInfo = new MatchInfo();
 
+    // 사용자 리스트 생성.
+
 
 
     //--------------------------------------------------------------
@@ -127,6 +129,9 @@ public class MatchingManager : MonoBehaviour {
     // 설명 : 매칭 성공 이후, 반환된 값을 이용한 게임 접근 진행 수순
     //--------------------------------------------------------------
     public void JoinGame(MatchMakingResponseEventArgs args) {
+        // 여기서부터 작업 시작할 것!!!!
+        // 일단 매개변수 갈아끼우기.
+
         // 인게임 서버 접속
         Backend.Match.JoinGameServer(serverAddress, serverPort, false, out errorInfo);
         
@@ -157,25 +162,14 @@ public class MatchingManager : MonoBehaviour {
         };
         Backend.Match.OnSessionJoinInServer += (args) => {
             Debug.Log("인게임 서버 접속 성공.");
+            // 일단 내부 리스트 초기화 코드.
         };
         Backend.Match.OnSessionListInServer += (args) => {
-             // 게임방 유저 정보 수신
-             // 리스트 초기화 코드
-             // 간단하게 ID만 받아서, 내부 클래스에 정리하고 리스트로 관리
+            // 수신된 유저 정보를, ID+점수로 이루어진 클래스의 내부 리스트에 차곡차곡 정리
         };
         Backend.Match.OnMatchInGameStart = () => {
             Debug.Log("게임 시작.");
             SceneLoader.LoadScene(nowMatchInfo.title); // 일단은 사격만
-        };
-        Backend.Match.OnMatchRelay += (args) => {
-            // 바이너리 데이터 처리
-            // 얘를 미니게임 매니저 안에다 쳐 넣어야 하나??
-            // 아마 사격이
-            //      1. 씬 전환 끝나자 마자 3초 세고 30초 동안 풍선 사격
-            //      2. 30초 이후에는 강제적으로 점수 데이터를 서버에 보내고, 인게임 팝업 띄워서(잠시 ㄱㄷ리셈) 터치 막아내기.
-            //      3. 2~3초 오프셋 내외로 리스트에 찍힌 전원이 보낼 테니, 여기서 결과 값을 받고 정렬시킨 뒤, 결과 팝업을 띄움.
-            //      4. 결과 팝업에 ok 버튼 누르면 matchEND 콜백 호출 후 인게임 씬으로 이동.
-            // 이렇게 할듯?
         };
         Backend.Match.OnMatchResult += (args) => {
             // 매치 마무리. 여기서 할 것은 별로 없음.
