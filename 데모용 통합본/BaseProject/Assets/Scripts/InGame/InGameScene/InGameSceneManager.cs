@@ -176,8 +176,10 @@ public class InGameSceneManager : MonoBehaviour
             var mission = _missions[index];
             if(mission.matchingInfo.Equals("No")){
                 StaticManager.PopUpUI.YesOrNoPopUp("선택된 미션은 비매칭 미션으로\n"+mission.sceneName+"에요. 미션을 플레이 하실건가요?",()=>{SceneLoader.LoadScene(mission.sceneName);}, ()=>{});
-            } else {
+            } else if(mission.matchingInfo.Equals("Yes")) {
                 StaticManager.PopUpUI.YesOrNoPopUp("선택된 미션은 매칭 미션으로\n"+mission.sceneName+"에요. 매칭을 시도하실건가요?",()=>{StaticManager.Matching.MatchingProcess(mission.sceneName);}, ()=>{});
+            } else {
+                StaticManager.PopUpUI.PopUp("매칭 포인트의 matchingInfo 파라미터가 삑이 났어요. 확인해보세요!")
             }
         } else {
             StaticManager.PopUpUI.PopUp("미션 인덱스 관련해서 오류가 터졌어요.\n어디가 잘못된건지 얼른 찾아보세요!");

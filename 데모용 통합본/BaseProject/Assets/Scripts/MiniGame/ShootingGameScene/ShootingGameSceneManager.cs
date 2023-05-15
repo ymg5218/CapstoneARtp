@@ -47,7 +47,7 @@ public class ShootingGameSceneManager : MonoBehaviour {
     [SerializeField] GameObject BalloonSpawner;
 
     int score = 0;
-    string id = "(-)";
+    string id;
 
 
     //--------------------------------------------------------------
@@ -72,7 +72,7 @@ public class ShootingGameSceneManager : MonoBehaviour {
     //--------------------------------------------------------------
     public void OnEnable() {        
         GameInit();
-        GameStartS();
+        GameStart();
     }
 
 
@@ -93,10 +93,9 @@ public class ShootingGameSceneManager : MonoBehaviour {
         //내부 변수 초기화.
         score = 0;
         id = StaticManager.PlayerData.userData.nickname;
-        // 리스트 초기화 코드
         // 현재 MM의 리스트 데이터를 가져와, 랭킹창 업데이트.
 
-        //UI 세팅
+        //여기서 부터는 GameStart로 옮겨야 함.
         GameStartButton.SetActive(false); // 이새끼 삭제해야 함.
         UI.SetActive(true);
 
@@ -129,8 +128,8 @@ public class ShootingGameSceneManager : MonoBehaviour {
     public void GameEnd() {
         // 멈추기 UI 띄우기
         
-        // 서버에 END 메시지 전달
-
+        // 서버에 END 메시지 전달 + 결과 등록
+        StaticManager.MinigameData.SetGameResult(score);
     }
 
 
@@ -150,19 +149,11 @@ public class ShootingGameSceneManager : MonoBehaviour {
 
 
     //--------------------------------------------------------------
-    // 메소드명 : MatchMakingHandler()
-    // 설명 : 매칭 관련 이벤트 핸들러
+    // 메소드명 : UpdateScoreboard()
+    // 설명 : 스코어보드 갱신 메소드
     //--------------------------------------------------------------
-    private void MatchMakingHandler() {
-        Backend.Match.OnMatchRelay += (args) => {
-            // 바이너리 데이터 처리
-            // 1. 점수 갱신(누가 점수 올린거 감지하자마자, 각 클라의 MM에서 받아 처리한 뒤, 랭킹창 업데이트 함수 호출)
-            // 2. END 메시지 획득시 카운팅. 카운팅=리스트 크기 시 랭킹창 보여주고 게임 마무리한뒤 인게임 씬으로 사출
-            
-            // 게임 마무리
-            StaticManager.MinigameData.SetGameResult(score);
-
-            SceneLoader.LoadScene("InGameScene");
-        };
+    public void UpdateScoreboard() {
+        // 여기에 점수판을 업데이트 하는 코드를 집어넣을 것.
+        // 아마 위->아래로 가는 통짜 Textbox주고, \n 구분자로 계속 집어넣으면 될 듯??
     }
 }

@@ -4,7 +4,8 @@
 // 작성일: 2023-05-05
 // 설명: 미니게임 매칭 시스템 매니저
 // 수정:
-// -
+// - 이수민(2023-05-12) : 세부적인 구조 설계
+// - 이수민(2023-05-14) : 세부 구조 구현
 //--------------------------------------------------------------
 
 using System;
@@ -23,12 +24,12 @@ public class MatchingManager : MonoBehaviour {
     // - errorInfo : 이벤트 처리 결과값 저장용 변수
     // - matchInfos : 서버에서 생성된 매치 데이터 저장용 리스트.
     // - nowMatchInfo : "현재" 매칭를 시도하는 미니게임의 매칭 정보
+    // - matchedUserData : 현재 매칭된 인원 데이터 저장용 리스트
     //--------------------------------------------------------------
     ErrorInfo errorInfo;
     public List<MatchInfo> matchInfos = new List<MatchInfo>();
-    MatchInfo nowMatchInfo = new MatchInfo();
-
-    // 사용자 리스트 생성.
+    public MatchInfo nowMatchInfo = new MatchInfo();
+    public List<MatchedUserData> matchedUserData;
 
 
 
@@ -62,7 +63,7 @@ public class MatchingManager : MonoBehaviour {
 
     //--------------------------------------------------------------
     // 메소드명 : GetMatchInfo()
-    // 설명 : 콘솔에 생성된 매칭 정보 가져오기.
+    // 설명 : 서버에 생성된 매칭 정보 가져오기.
     //--------------------------------------------------------------
     void GetMatchList() {
         // 매칭 정보 초기화
@@ -162,14 +163,30 @@ public class MatchingManager : MonoBehaviour {
         };
         Backend.Match.OnSessionJoinInServer += (args) => {
             Debug.Log("인게임 서버 접속 성공.");
-            // 일단 내부 리스트 초기화 코드.
+            // 내부 리스트 초기화 코드.
+            matchedUserData = new List<GameObject>();
         };
-        Backend.Match.OnSessionListInServer += (args) => {
-            // 수신된 유저 정보를, ID+점수로 이루어진 클래스의 내부 리스트에 차곡차곡 정리
+        Backend.Match.OnMatchInGameAccess += (args) => {
+            // 누군가 접속하는 대로, 이 사람 데이터가 내부 리스트에 저장되어 있는지 확인
+            MatchedUserData foundItem = myList.FirstOrDefault(item => item.Id == args.GameRecord.m_nickname);
+
+            // 없는거 같은데 -> 추가
+            if(foundItem == null){
+                MatchedUserData obj = new MatchedUserData { Id = args.GameRecord.m_nickname, Score = 0};
+                matchedUserData.Add(obj);
+            } else {
+                Debug.Log("같은 닉네임이 존재함");
+            }
         };
         Backend.Match.OnMatchInGameStart = () => {
-            Debug.Log("게임 시작.");
-            SceneLoader.LoadScene(nowMatchInfo.title); // 일단은 사격만
+            StaticManager.PopUpUI.PopUp("게임 시작", ()=>{SceneLoader.LoadScene(nowMatchInfo.title);}); 
+        };
+        Backend.Match.OnMatchRelay += (args) => {
+            // 바이너리 데이터 처리
+            // 1. 점수 갱신(누가 점수 올린거 감지하자마자, 여기서 확인해서 리스트 갱신시키고, 해당 미니게임의 매니저에다 랭킹판 업데이트 지시)
+            // 2. END 메시지 획득시 카운팅. 카운팅=리스트 크기 시 랭킹창 보여주고 게임 마무리한뒤 인게임 씬으로 사출
+            
+            SceneLoader.LoadScene("InGameScene");
         };
         Backend.Match.OnMatchResult += (args) => {
             // 매치 마무리. 여기서 할 것은 별로 없음.
