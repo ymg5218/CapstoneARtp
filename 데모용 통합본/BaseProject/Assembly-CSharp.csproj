@@ -560,6 +560,7 @@
      <Compile Include="Assets\Scripts\MiniGame\ShootingGameScene\Component\BalloonSpawner.cs" />
      <Compile Include="Assets\Scripts\MiniGame\ShootingGameScene\ShootingGameSceneManager.cs" />
      <Compile Include="Assets\Scripts\Static\Data\MatchInfo.cs" />
+     <Compile Include="Assets\Scripts\Static\Data\MatchedUserData.cs" />
      <Compile Include="Assets\Scripts\Static\Data\RankItem.cs" />
      <Compile Include="Assets\Scripts\Static\Data\UserData.cs" />
      <Compile Include="Assets\Scripts\Static\Func\Dispatcher.cs" />

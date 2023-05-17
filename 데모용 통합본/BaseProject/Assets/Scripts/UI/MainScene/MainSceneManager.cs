@@ -125,11 +125,11 @@ public class MainSceneManager : MonoBehaviour
     // 설명 :
     // <메인 버튼 리스너>
     // - GameStart : 게임 시작 버튼, 인게임 씬 불러오기.
-    // - Shop : 상점 버튼, 상점 씬 불러오기.
-    // - Challenge : 챌린지 버튼, 챌린지 씬 불러오기
+    // - Shop : 상점 버튼, 상점 씬 불러오기.(ㄴㄴ)
+    // - Challenge : 랭킹 버튼. 랭킹 씬 불러오기(ㄴㄴ)
     // - GameQuit : 게임 종료 버튼
     // <사이드 버튼 리스너>
-    // - Settings : 세팅 버튼, 일단은 플레이어 정보 수정을 수행할 예정.
+    // - Settings : 세팅 버튼, 나중에 플레이어 정보 수정을 수행할 예정.
     //--------------------------------------------------------------
     private void GameStart(){
         SceneLoader.LoadScene("InGameScene");
@@ -143,7 +143,5 @@ public class MainSceneManager : MonoBehaviour
         Debug.Log("게임 종료 버튼");
     }
     private void Settings(){
-        // 여기에 UIManager로 팝업을 띄우기.
-        // 적용시 데이터 업데이트 후, SetUIUser 재호출.
     }
 }

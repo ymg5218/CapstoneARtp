@@ -5,8 +5,9 @@
 // 설명: 미니게임 매칭 시스템 매니저
 // 수정:
 // - 이수민(2023-05-12) : 세부적인 구조 설계
-// - 이수민(2023-05-14) : 세부 구조 구현
+// - 이수민(2023-05-14) : 세부 구조 구현 중간단계
 //--------------------------------------------------------------
+
 
 using System;
 using System.Collections;
@@ -27,8 +28,8 @@ public class MatchingManager : MonoBehaviour {
     // - matchedUserData : 현재 매칭된 인원 데이터 저장용 리스트
     //--------------------------------------------------------------
     ErrorInfo errorInfo;
-    public List<MatchInfo> matchInfos = new List<MatchInfo>();
-    public MatchInfo nowMatchInfo = new MatchInfo();
+    public List<MatchInfo> matchInfos = new List<MatchInfo>();  // 굳이 리스트로 만들 필요 없음.
+    public MatchInfo nowMatchInfo = new MatchInfo();    // 위에꺼 리스트로 만들어둔 상태라 그냥 여기에다 매칭 정보 바로 받아와도 상관없음.
     public List<MatchedUserData> matchedUserData;
 
 
@@ -54,7 +55,9 @@ public class MatchingManager : MonoBehaviour {
 
     //--------------------------------------------------------------
     // 메소드명 : JoinMatchMakingServer()
-    // 설명 : 매칭 서버 접속
+    // 설명 : 
+    // - 매칭 서버와 소켓 연결이 되어 있는지 확인
+    // - 앱 실행시(StaticManager 호출시), 최초로 한번 수행되어 연결이 되어있는지 확인.
     //--------------------------------------------------------------
     void JoinMatchMakingServer() {
         Backend.Match.JoinMatchMakingServer(out errorInfo);
@@ -106,12 +109,13 @@ public class MatchingManager : MonoBehaviour {
 
 
     //--------------------------------------------------------------
-    // 메소드명 : MatchingProcess(string sceneName)
-    // 입력 : 
-    // - sceneName : 매칭을 시도할 미니게임.
-    // 설명 : 미니게임 매칭 작업
+    // 메소드명 : MatchingProcess()
+    // 설명 : 
+    // - 메인화면에서 게임 시작 버튼을 누를 경우 호출되는 메소드.
+    // - Init 과정에서 받아와 저장한 매칭 정보(MatchInfos)에 기반하여, 뒤끝 내부 함수로 매칭 수행.
     //--------------------------------------------------------------
-    public void MatchingProcess(string sceneName) {
+    public void MatchingProcess() {
+        /*
         // 매칭 공간 생성
         Backend.Match.CreateMatchRoom();
 
@@ -122,16 +126,16 @@ public class MatchingManager : MonoBehaviour {
                 StaticManager.PopUpUI.PopUp(sceneName+"미션의 매칭을 시작합니다.",()=>{Backend.Match.RequestMatchMaking(nowMatchInfo.matchType, nowMatchInfo.matchModeType, nowMatchInfo.inDate);});
             }
         }
+        */
     }
 
 
     //--------------------------------------------------------------
     // 메소드명 : JoinGame(MatchMakingResponseEventArgs args)
-    // 설명 : 매칭 성공 이후, 반환된 값을 이용한 게임 접근 진행 수순
+    // 설명 : 매칭 성공 이후, 반환된 값을 활용해 인게임에 접근하기 위한 진행 수순
     //--------------------------------------------------------------
     public void JoinGame(MatchMakingResponseEventArgs args) {
-        // 여기서부터 작업 시작할 것!!!!
-        // 일단 매개변수 갈아끼우기.
+        // 매개변수 갈아끼우기.
 
         // 인게임 서버 접속
         Backend.Match.JoinGameServer(serverAddress, serverPort, false, out errorInfo);
@@ -166,8 +170,14 @@ public class MatchingManager : MonoBehaviour {
             // 내부 리스트 초기화 코드.
             matchedUserData = new List<GameObject>();
         };
+        Backend.Match.OnSessionListInServer += (args) => {
+            // 처음 게임방에 접속했을 때 호출되는 이벤트
+            // 현재 접속된 유저의 정보 수신하고 리스트에 정리
+        };
         Backend.Match.OnMatchInGameAccess += (args) => {
-            // 누군가 접속하는 대로, 이 사람 데이터가 내부 리스트에 저장되어 있는지 확인
+            // 누군가 접속하는 대로 호출되는 이벤트
+            // 리스트에 해당 인원이 존재하는지 판단하고, 없으면 리스트에 추가
+            // 이 사람 데이터가 내부 리스트에 저장되어 있는지 확인
             MatchedUserData foundItem = myList.FirstOrDefault(item => item.Id == args.GameRecord.m_nickname);
 
             // 없는거 같은데 -> 추가
@@ -179,17 +189,15 @@ public class MatchingManager : MonoBehaviour {
             }
         };
         Backend.Match.OnMatchInGameStart = () => {
-            StaticManager.PopUpUI.PopUp("게임 시작", ()=>{SceneLoader.LoadScene(nowMatchInfo.title);}); 
+            // 매칭된 인원 전원이 인게임 서버에 접속에 성공했을 시, InGameScene으로 전환 수행.
+            // StaticManager.PopUpUI.PopUp("게임 시작", ()=>{SceneLoader.LoadScene(nowMatchInfo.title);}); 
         };
         Backend.Match.OnMatchRelay += (args) => {
             // 바이너리 데이터 처리
-            // 1. 점수 갱신(누가 점수 올린거 감지하자마자, 여기서 확인해서 리스트 갱신시키고, 해당 미니게임의 매니저에다 랭킹판 업데이트 지시)
-            // 2. END 메시지 획득시 카운팅. 카운팅=리스트 크기 시 랭킹창 보여주고 게임 마무리한뒤 인게임 씬으로 사출
-            
-            SceneLoader.LoadScene("InGameScene");
+            // 점수 갱신(누가 미니게임 끝내고 서버로 점수 뿌렸을 때, 이를 받아 인게임 씬의 화면에 갱신시키기)
         };
         Backend.Match.OnMatchResult += (args) => {
-            // 매치 마무리. 여기서 할 것은 별로 없음.
+            // 매치 마무리.
         };
     }
 }
