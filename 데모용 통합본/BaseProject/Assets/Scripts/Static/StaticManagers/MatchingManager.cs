@@ -34,6 +34,8 @@ public class MatchingManager : MonoBehaviour {
 
 
 
+
+
     //--------------------------------------------------------------
     // 메소드명 : Init()
     // 설명 : 초기화 작업.
@@ -161,14 +163,14 @@ public class MatchingManager : MonoBehaviour {
                 case ErrorCode.Success:
                     StaticManager.PopUpUI.PopUp("매칭 성공", ()=>{JoinGame(args);});
                     break;
-                default : 
+                default: 
                     StaticManager.PopUpUI.PopUp("매칭 실패");
             }
         };
         Backend.Match.OnSessionJoinInServer += (args) => {
             Debug.Log("인게임 서버 접속 성공.");
             // 내부 리스트 초기화 코드.
-            matchedUserData = new List<GameObject>();
+             matchedUserData = new List<GameObject>();
         };
         Backend.Match.OnSessionListInServer += (args) => {
             // 처음 게임방에 접속했을 때 호출되는 이벤트
@@ -178,9 +180,12 @@ public class MatchingManager : MonoBehaviour {
             // 누군가 접속하는 대로 호출되는 이벤트
             // 리스트에 해당 인원이 존재하는지 판단하고, 없으면 리스트에 추가
             // 이 사람 데이터가 내부 리스트에 저장되어 있는지 확인
+
+
             MatchedUserData foundItem = myList.FirstOrDefault(item => item.Id == args.GameRecord.m_nickname);
 
             // 없는거 같은데 -> 추가
+            
             if(foundItem == null){
                 MatchedUserData obj = new MatchedUserData { Id = args.GameRecord.m_nickname, Score = 0};
                 matchedUserData.Add(obj);

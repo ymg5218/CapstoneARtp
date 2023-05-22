@@ -9,6 +9,7 @@
 // - 이수민(2023-04-12) : 미션 데이터 위치 변경(Resource/Settings/InGame안에 있음.)
 // - 이수민(2023-04-19) : Start() 제거
 // - 이수민(2023-04-19) : JSON 파일 불러오는 방식 변경(안드로이드의 경우 추가)
+// - 염민규(2023-05-21) : StartTimer() 추가
 //--------------------------------------------------------------
 
 
@@ -74,6 +75,7 @@ public class InGameSceneManager : MonoBehaviour
         SetUIUser();            // 유저 데이터 표시 UI 세팅 메소드.
         SetUIComponent();       // 인게임 UI 세팅 메소드.
         SpawnMissionObjects();  // 미션 오브젝트 생성
+        StartTimer();           // 타이머 시작 23/05/21 민규 추가
     }
 
 
@@ -180,5 +182,13 @@ public class InGameSceneManager : MonoBehaviour
         } else {
             StaticManager.PopUpUI.PopUp("미션 인덱스 관련해서 오류가 터졌어요.\n어디가 잘못된건지 얼른 찾아보세요!");
         }
+    }
+    //--------------------------------------------------------------
+    // 메소드명 : StartTimer()
+    // 설명 : 인 게임 씬 최초 접근 시점부터 카운트 시작하도록 bool 값 조정
+    //--------------------------------------------------------------
+    void StartTimer()
+    {
+        StaticManager.Timer.isTimerStart = true;
     }
 }
