@@ -164,7 +164,7 @@ public class MatchingManager : MonoBehaviour {
         Backend.Match.OnSessionJoinInServer += (args) => {
             Debug.Log("인게임 서버 접속 성공.");
             // 매칭 유저 정보 초기화
-            matchedUserDatas.clear()
+            matchedUserDatas.clear();
         };
         // 처음 게임방에 접속했을 때 호출되는 이벤트
         // 현재 접속된 유저의 정보 수신하고 리스트에 정리
@@ -172,8 +172,8 @@ public class MatchingManager : MonoBehaviour {
             // 현재 접속된 유저 정보 리스트로 데꼬옴
             foreach (var member in args.GameRecord)  { 
                 MatchedUserData matchedUserData = new MatchedUserData();
-                matchedUserData.Id = member.m_nickname;
-                matchedUserData.Score = 0;
+                matchedUserData.id = member.m_nickname;
+                matchedUserData.score = 0;
                 matchedUserDatas.Add(matchedUserData);
             }
         };
@@ -184,7 +184,7 @@ public class MatchingManager : MonoBehaviour {
             bool foundItem = false;
 
             foreach (var currentMember in matchedUserDatas)  { 
-                if (currentMember.Id == args.GameRecord.m_nickname) {
+                if (currentMember.id == args.GameRecord.m_nickname) {
                     foundItem = true;
                     break;
                 }
@@ -199,13 +199,47 @@ public class MatchingManager : MonoBehaviour {
                 Debug.Log("같은 닉네임이 존재해요!");
             }
         };
-        // 매칭된 인원 전원이 인게임 서버에 접속에 성공했을 시, InGameScene으로 전환 수행.
+        // 매칭된 인원 전원이 인게임 서버에 접속에 성공했을 시, 팀 배정 후 InGameScene으로 전환 수행.
         Backend.Match.OnMatchInGameStart = () => {
+            //정렬
+            var sortedList = matchedUserDatas.OrderBy(member => member.id).ToList();
+            // 원래 리스트 비우고 재정의
+            matchedUserDatas.clear();
+            matchedUserDatas.AddRange(sortedList);
+            // 팀 정의 ㅋㅋ
+            for (int i = 0; i < matchedUserDatas.Count; i++) {
+                if (i % 2 == 0) {
+                    matchedUserDatas[i].team = "RED";
+                } else  {
+                    matchedUserDatas[i].team = "BLUE";
+                }
+            }
+
             StaticManager.PopUpUI.PopUp("매칭 끝! 게임 시작", ()=>{SceneLoader.LoadScene(nowMatchInfo.title);}); 
         };
+        // 바이너리 데이터 처리
         Backend.Match.OnMatchRelay += (args) => {
-            // 바이너리 데이터 처리
+            // 역인코딩
+            string str = ByteArrayToString(args.BinaryUserData, Encoding.ASCII);
+            
+            // 문자열 나누기(아마 NKYL|200 이런 식으로 문자 보낼 예정)
+            string[] parts = input.Split('|');
+
             // 점수 갱신(누가 미니게임 끝내고 서버로 점수 뿌렸을 때, 이를 받아 인게임 씬의 화면에 갱신시키기)
+            foreach (var currentMember in matchedUserDatas)  { 
+                if (currentMember.id == parts[0]) {
+                    currentMember.score += int.Parse(parts[2]);
+                    break;
+                }
+            }
+
+            // ** 여기에 인게임 씬의 점수판 업데이트 메소드를 넣기
+        };
+        // 채팅 메시지 핸들러
+        Backend.Match.OnMatchChat = (MatchChatEventArgs args) => {
+            // 인게임 씬 채팅창 업데이트 메소드.(args.Message);
+            // 채팅 보낼때는 (StaticManager.PlayerData.userData.nickname + "채팅 내용") 요렇게 보내기! 그러면 따로 귀찮게 세션 ID 확인하는 작업 안해도 됨ㅇㅇ;;
+            // 필요하다면 위에서 리스트로 팀 확인하고 같은 팀만 보낼 수도 있음. 간단하다!
         };
         Backend.Match.OnMatchResult += (args) => {
             // 매치 마무리.

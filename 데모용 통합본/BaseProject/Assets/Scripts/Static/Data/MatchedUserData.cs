@@ -16,6 +16,7 @@ using BackEnd;
 
 public class MatchedUserData
 {
-    public string Id { get; set; }           // 사용자 ID
-    public int Score { get; set; }  // 점수
+    public string id;        // 사용자 ID
+    public int score;        // 점수
+    public string team;
 }
