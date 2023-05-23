@@ -24,6 +24,8 @@ public class StaticManager : MonoBehaviour
     // - PopUpUI : 팝업 UI 관리
     // - PlayerData : 플레이어 데이터 관리
     // - MinigameData : 미니게임 데이터 관리
+    // - Matching : 매칭 매니저
+    // - Timer : 타이머 관리 매니저
     //--------------------------------------------------------------
     public static StaticManager Instance { get; private set; }
 

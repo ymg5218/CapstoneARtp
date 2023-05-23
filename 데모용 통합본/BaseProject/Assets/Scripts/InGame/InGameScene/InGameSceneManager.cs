@@ -10,6 +10,7 @@
 // - 이수민(2023-04-19) : Start() 제거
 // - 이수민(2023-04-19) : JSON 파일 불러오는 방식 변경(안드로이드의 경우 추가)
 // - 염민규(2023-05-21) : StartTimer() 추가
+// - 이수민(2023-05-24) : StartTimer() 마이너 변경
 //--------------------------------------------------------------
 
 
@@ -186,9 +187,13 @@ public class InGameSceneManager : MonoBehaviour
     //--------------------------------------------------------------
     // 메소드명 : StartTimer()
     // 설명 : 인 게임 씬 최초 접근 시점부터 카운트 시작하도록 bool 값 조정
+    // 수정 :
+    // - 이수민(2023-05-24) : Timer가 false일 때만 동작하도록 변경. 혹시 나중에 기능 추가할 수 있으니
     //--------------------------------------------------------------
     void StartTimer()
     {
-        StaticManager.Timer.isTimerStart = true;
+        if(StaticManager.Timer.isTimerStart != true) {
+            StaticManager.Timer.isTimerStart = true;
+        }
     }
 }
