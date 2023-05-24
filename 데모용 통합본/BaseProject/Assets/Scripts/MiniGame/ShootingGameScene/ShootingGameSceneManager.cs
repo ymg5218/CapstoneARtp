@@ -122,10 +122,18 @@ public class ShootingGameSceneManager : MonoBehaviour {
     //      2. 인게임 씬으로 사출되면서, MM의 내부 리스트의 score 변수에 값 집어넣기.
     //--------------------------------------------------------------
     public void GameEnd() {
-        // 결과 UI 띄우기
-        
-        // 서버에 점수 등록. 신경 X
+        // 서버에 점수 등록
         StaticManager.MinigameData.SetGameResult(score);
+
+        // MM 리스트에 점수 증가++
+        StaticManager.Matching.IncreaseScore(StaticManager.PlayerData.userData.nickname, score);
+
+        // 결과 UI 띄우는 메소드를 여기에 넣을 것.
+        // (여기!)
+
+
+        // 메인 씬으로 돌아가는 함수. 나중에 결과 UI에 트리거로서 넣을 것.
+        // SceneLoader.LoadScene("InGameScene");
     }
 
 
@@ -139,6 +147,4 @@ public class ShootingGameSceneManager : MonoBehaviour {
         score += 100;
         scoreText.text = "점수 : " + score.ToString();
     }
-
-
 }

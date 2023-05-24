@@ -140,6 +140,16 @@ public class MatchingManager : MonoBehaviour {
     }
 
 
+    //--------------------------------------------------------------
+    // 메소드명 : IncreaseScore(string name, int score)
+    // 설명 : 미니게임 끝낸 사람의 점수를 업데이트 시키기.
+    //--------------------------------------------------------------
+    public void IncreaseScore(string name, int score) {
+        string msg = name + "|" + score;            // NKYL|200 형태로 보냄.
+        data = Encoding.ASCII.GetBytes(msg);        // 바이너리 데이터 화.
+        Backend.Match.SendDataToInGameRoom(data);        
+    }
+
 
     //--------------------------------------------------------------
     // 메소드명 : MatchMakingHandler()
@@ -206,7 +216,7 @@ public class MatchingManager : MonoBehaviour {
             // 원래 리스트 비우고 재정의
             matchedUserDatas.clear();
             matchedUserDatas.AddRange(sortedList);
-            // 팀 정의 ㅋㅋ
+            // 팀 정의
             for (int i = 0; i < matchedUserDatas.Count; i++) {
                 if (i % 2 == 0) {
                     matchedUserDatas[i].team = "RED";
@@ -232,14 +242,11 @@ public class MatchingManager : MonoBehaviour {
                     break;
                 }
             }
-
-            // ** 여기에 인게임 씬의 점수판 업데이트 메소드를 넣기
+            InGameSceneManager.Instance.UpdateScoreBoard();   // 솔직히 이거, 누가 미니게임 도중이라 InGameSceneManager의 Instance가 비워져 있으면 어떻게될지 모르겠음;;
         };
         // 채팅 메시지 핸들러
         Backend.Match.OnMatchChat = (MatchChatEventArgs args) => {
-            // 인게임 씬 채팅창 업데이트 메소드.(args.Message);
-            // 채팅 보낼때는 (StaticManager.PlayerData.userData.nickname + "채팅 내용") 요렇게 보내기! 그러면 따로 귀찮게 세션 ID 확인하는 작업 안해도 됨ㅇㅇ;;
-            // 필요하다면 위에서 리스트로 팀 확인하고 같은 팀만 보낼 수도 있음. 간단하다!
+            InGameSceneManager.Instance.UpdateChat(args.Message);   // 솔직히 이거, 누가 미니게임 도중이라 InGameSceneManager의 Instance가 비워져 있으면 어떻게될지 모르겠음;;
         };
         Backend.Match.OnMatchResult += (args) => {
             // 매치 마무리.

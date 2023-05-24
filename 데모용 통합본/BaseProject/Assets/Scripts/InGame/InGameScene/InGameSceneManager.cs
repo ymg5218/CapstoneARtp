@@ -11,6 +11,7 @@
 // - 이수민(2023-04-19) : JSON 파일 불러오는 방식 변경(안드로이드의 경우 추가)
 // - 염민규(2023-05-21) : StartTimer() 추가
 // - 이수민(2023-05-24) : StartTimer() 마이너 변경
+// - 이수민(2023-05-24) : SendChat()/UpdateScoreBoard()/UpdateChat() 추가
 //--------------------------------------------------------------
 
 
@@ -184,16 +185,52 @@ public class InGameSceneManager : MonoBehaviour
             StaticManager.PopUpUI.PopUp("미션 인덱스 관련해서 오류가 터졌어요.\n어디가 잘못된건지 얼른 찾아보세요!");
         }
     }
+
+
     //--------------------------------------------------------------
     // 메소드명 : StartTimer()
     // 설명 : 인 게임 씬 최초 접근 시점부터 카운트 시작하도록 bool 값 조정
     // 수정 :
     // - 이수민(2023-05-24) : Timer가 false일 때만 동작하도록 변경. 혹시 나중에 기능 추가할 수 있으니
     //--------------------------------------------------------------
-    void StartTimer()
-    {
+    public void StartTimer() {
         if(StaticManager.Timer.isTimerStart != true) {
             StaticManager.Timer.isTimerStart = true;
         }
+    }
+
+    //--------------------------------------------------------------
+    // 메소드명 : UpdateScoreBoard()
+    // 설명 :
+    // - 점수판 업데이트
+    //--------------------------------------------------------------
+    public void UpdateScoreBoard() {
+        // foreach문으로 MM리스트 순회
+        // IF RED -> ID : 점수 형태로 가공해서 점수판 텍스트박스에 추가하기
+        // IF BLUE -> ID : 점수 형태로 가공해서 점수판 텍스트박스에 추가하기
+    }
+
+
+    //--------------------------------------------------------------
+    // 메소드명 : SendChat()
+    // 설명 : 
+    // - 채팅 보내기 버튼 누르면 발송.
+    //--------------------------------------------------------------
+    public void SendChat() {
+        string str = msgbox; // 화면 내 메시지 박스에서 값 긁어오기.
+        string msg = StaticManager.PlayerData.userData.nickname + " : " + str; // 대충 "NKYL : 안녕하세요" 이런 느낌이 될 것.
+        Backend.Match.ChatToGameRoom(MatchChatModeType.All, msg);
+    }
+
+
+    //--------------------------------------------------------------
+    // 메소드명 : UpdateChat(string msg)
+    // 설명 : MM에서 받아온 msg를 화면에 띄우는 역할.
+    // 수정 :
+    // - 이수민(2023-05-24) : Timer가 false일 때만 동작하도록 변경. 혹시 나중에 기능 추가할 수 있으니
+    //--------------------------------------------------------------
+    public void UpdateChat(string msg) {
+        // 날아온 msg를 채팅창 텍스트박스에 추가시키기.
+        // 앞에 \n다는거 잊지 말기!
     }
 }
