@@ -325,7 +325,7 @@ GameObject:
   - component: {fileID: 6155353730725036224}
   - component: {fileID: 6155353730725036226}
   - component: {fileID: 6155353730725036227}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -404,7 +404,7 @@ GameObject:
   - component: {fileID: 6155353730755975593}
   - component: {fileID: 6155353730755975590}
   - component: {fileID: 6155353730755975591}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: YesButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -524,7 +524,7 @@ GameObject:
   - component: {fileID: 6155353731049961316}
   - component: {fileID: 6155353731049961317}
   - component: {fileID: 4138107028056526350}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: PopUpUIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +570,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &6155353731049961316
 MonoBehaviour:
@@ -638,7 +638,7 @@ GameObject:
   - component: {fileID: 6155353731070626927}
   - component: {fileID: 6155353731070626929}
   - component: {fileID: 6155353731070626926}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -716,7 +716,7 @@ GameObject:
   - component: {fileID: 6155353731086897132}
   - component: {fileID: 6155353731086897134}
   - component: {fileID: 6155353731086897135}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -794,7 +794,7 @@ GameObject:
   - component: {fileID: 6155353731170064728}
   - component: {fileID: 6155353731170064730}
   - component: {fileID: 6155353731170064731}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Context
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -870,7 +870,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6155353731206931674}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: YesOrNo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -909,7 +909,7 @@ GameObject:
   - component: {fileID: 6155353731245097120}
   - component: {fileID: 6155353731245097122}
   - component: {fileID: 6155353731245097123}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: BackgroundImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -924,7 +924,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6155353731245097121}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6155353731086897132}
@@ -988,7 +988,7 @@ GameObject:
   - component: {fileID: 6155353731646866463}
   - component: {fileID: 6155353731646866460}
   - component: {fileID: 6155353731646866461}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: NoButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1106,7 +1106,7 @@ GameObject:
   - component: {fileID: 6155353731651755014}
   - component: {fileID: 6155353731651755016}
   - component: {fileID: 6155353731651755017}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1185,7 +1185,7 @@ GameObject:
   - component: {fileID: 6155353731698278004}
   - component: {fileID: 6155353731698278005}
   - component: {fileID: 6155353731698278002}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: OKButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}

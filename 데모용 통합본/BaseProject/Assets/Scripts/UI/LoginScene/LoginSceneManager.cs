@@ -131,8 +131,9 @@ public class LoginSceneManager : MonoBehaviour
         string playerPW;
         playerID = _playerIDInput.GetComponent<InputField>().text;
         playerPW = _playerPWInput.GetComponent<InputField>().text;
+
         if (BackendLogin.Instance.SignUpProcess(playerID,playerPW)) {
-            StaticManager.PopUpUI.PopUp("회원가입 성공");
+            StaticManager.PopUpUI.PopUp("회원가입 성공", () => { SceneLoader.LoadScene("SetNicknameScene"); });
         } else {
             StaticManager.PopUpUI.PopUp("회원가입 실패");
         }

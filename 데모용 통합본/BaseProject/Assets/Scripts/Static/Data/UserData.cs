@@ -5,6 +5,7 @@
 // 설명: 플레이어 데이터 저장용 클래스
 // 수정:
 // - 이수민(2023-04-07) - 문서화 작업, PlayerDataManager에서 분리
+// - 염민규(2023-05-29) - Item 1~4 보유상황도 유저데이터에 추가함
 //--------------------------------------------------------------
 
 
@@ -21,11 +22,16 @@ public class UserData {
     // - title : 플레이어 칭호. 일단은 직접 입력인데, 나중에 선택 방식으로 바꿀지 고민중
     // - exp : 플레이어 경험치. 교수님이 넣으래서 넣었음.
     // - money : 플레이어 자본. 2차 데모때 상점 씬에서 사용하게 될 것.
+    // - Item 1~4 : 미니게임 시간추가, 닉변권, 태그 구매권, 닉네임 색상 변경권 보유량/보유상황 확인
     //--------------------------------------------------------------
     public string nickname = string.Empty;
     public string title = string.Empty;
     public int exp = 0;
     public int money = 0;
+    public int Item1 = 0;
+    public int Item2 = 0;
+    public bool Item3 = false;
+    public bool Item4 = false;
 
 
     //--------------------------------------------------------------
@@ -38,6 +44,10 @@ public class UserData {
         result.AppendLine($"title : {title}");
         result.AppendLine($"exp : {exp}");
         result.AppendLine($"money : {money}");
+        result.AppendLine($"Item1 : {Item1}");
+        result.AppendLine($"Item2 : {Item2}");
+        result.AppendLine($"Item3 : {Item3}");
+        result.AppendLine($"Item4 : {Item4}");
 
         return result.ToString();
     }

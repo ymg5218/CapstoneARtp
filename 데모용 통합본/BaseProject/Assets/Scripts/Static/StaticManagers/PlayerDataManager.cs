@@ -23,7 +23,7 @@ public class PlayerDataManager : MonoBehaviour
     // - gameDataRowInDate : 데이터 변경 일자에 대한 고유값.
     //--------------------------------------------------------------
     public UserData userData = new UserData();
-    private string gameDataRowInDate = string.Empty;
+    public string gameDataRowInDate = string.Empty;
     
     
     //--------------------------------------------------------------
@@ -68,10 +68,15 @@ public class PlayerDataManager : MonoBehaviour
     //--------------------------------------------------------------
     public void GameDataInit(){
         Debug.Log("데이터 초기화.");
-        userData.nickname = "NKYL";
-        userData.title = "졸업하고 싶다 ㅋㅋ";
+        BackendReturnObject bro = Backend.BMember.GetUserInfo();
+        userData.nickname = bro.GetReturnValuetoJSON()["row"]["nickname"].ToString();
+        userData.title = "초보";
         userData.exp = 0;
         userData.money = 0;
+        userData.Item1 = 0;
+        userData.Item2 = 0;
+        userData.Item3 = false;
+        userData.Item4 = false;
     }
 
 
@@ -86,6 +91,10 @@ public class PlayerDataManager : MonoBehaviour
         param.Add("title", userData.title);
         param.Add("exp", userData.exp);
         param.Add("money", userData.money);
+        param.Add("Item1", userData.Item1);
+        param.Add("Item2", userData.Item2);
+        param.Add("Item3", userData.Item3);
+        param.Add("Item4", userData.Item4);
 
         Debug.Log("게임정보 데이터 삽입 요청.");
         var bro = Backend.GameData.Insert("USER_DATA", param);
@@ -110,6 +119,10 @@ public class PlayerDataManager : MonoBehaviour
         userData.title = gameDataJson[0]["title"].ToString();
         userData.exp = int.Parse(gameDataJson[0]["exp"].ToString());
         userData.money = int.Parse(gameDataJson[0]["money"].ToString());
+        userData.Item1 = int.Parse(gameDataJson[0]["Item1"].ToString());
+        userData.Item2 = int.Parse(gameDataJson[0]["Item2"].ToString());
+        userData.Item3 = bool.Parse(gameDataJson[0]["Item3"].ToString());
+        userData.Item4 = bool.Parse(gameDataJson[0]["Item4"].ToString());
 
         Debug.Log(userData.ToString());
     }

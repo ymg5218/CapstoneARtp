@@ -584,6 +584,7 @@
     <Compile Include="Assets\Scripts\Static\StaticManagers\PopUpUIManager.cs" />
     <Compile Include="Assets\Scripts\UI\LoginScene\Func\BackendLogin.cs" />
     <Compile Include="Assets\Scripts\UI\LoginScene\LoginSceneManager.cs" />
+    <Compile Include="Assets\Scripts\UI\LoginScene\SignUp_SetNickname.cs" />
     <Compile Include="Assets\Scripts\UI\MainScene\MainSceneManager.cs" />
     <Compile Include="Assets\Scripts\UI\MainScene\RankSceneManager.cs" />
     <Compile Include="Assets\Scripts\UI\MainScene\ShopSceneManager.cs" />
