@@ -132,7 +132,7 @@ public class MainSceneManager : MonoBehaviour
     // - Settings : 세팅 버튼, 나중에 플레이어 정보 수정을 수행할 예정.
     //--------------------------------------------------------------
     private void GameStart(){
-        SceneLoader.LoadScene("InGameScene"); // 나중에 매칭 프로세스로 바꾸어야 함!!!!
+        StaticManager.PopUpUI.PopUp("매칭?",()=>{Static.Matching.MatchingProcess();});
     }
     private void Shop(){
     }

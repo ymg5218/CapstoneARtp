@@ -193,6 +193,7 @@ public class MatchingManager : MonoBehaviour {
         // 리스트에 해당 인원이 존재하는지 판단하고, 없으면 리스트에 추가
         Backend.Match.OnMatchInGameAccess += (args) => {
             // 이 새끼 데이터가 내부 리스트에 저장되어 있는지 확인
+            /*
             bool foundItem = false;
 
             foreach (var currentMember in matchedUserDatas)  { 
@@ -200,7 +201,7 @@ public class MatchingManager : MonoBehaviour {
                     foundItem = true;
                     break;
                 }
-            }
+            }   // 이게 필요한가??? 어짜피 동일 닉은 자체적으로 걸러주는데
             
             if(!foundItem){
                 MatchedUserData matchedUserData = new MatchedUserData();
@@ -211,6 +212,15 @@ public class MatchingManager : MonoBehaviour {
                 Debug.Log("같은 닉네임이 존재해요!");
             }
         };
+        */
+
+        // 걍 등록. 굳이 닉네임 검사 필요 없을듯??
+        MatchedUserData matchedUserData = new MatchedUserData();
+        matchedUserData.id = args.GameRecord.m_nickname;
+        matchedUserData.score = 0;
+        matchedUserDatas.Add(matchedUserData);
+
+
         // 매칭된 인원 전원이 인게임 서버에 접속에 성공했을 시, 팀 배정 후 InGameScene으로 전환 수행.
         Backend.Match.OnMatchInGameStart = () => {
             //정렬
