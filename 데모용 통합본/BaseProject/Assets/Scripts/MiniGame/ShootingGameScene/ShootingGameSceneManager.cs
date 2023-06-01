@@ -126,7 +126,7 @@ public class ShootingGameSceneManager : MonoBehaviour {
         StaticManager.MinigameData.SetGameResult(score);
 
         // MM 리스트에 점수 증가++
-        StaticManager.Matching.IncreaseScore(StaticManager.PlayerData.userData.nickname, score);
+        StaticManager.Matching.IncreaseTeamScore(StaticManager.PlayerData.userData.nickname, score);
 
         // 결과 UI 띄우는 메소드를 여기에 넣을 것.
         // (여기!)

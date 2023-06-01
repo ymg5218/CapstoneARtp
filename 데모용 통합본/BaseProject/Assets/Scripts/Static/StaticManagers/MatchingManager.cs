@@ -1,4 +1,4 @@
-﻿//--------------------------------------------------------------
+//--------------------------------------------------------------
 // 파일명: MatchingManager.cs
 // 작성자: 이수민
 // 작성일: 2023-05-05
@@ -10,6 +10,7 @@
 
 
 using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -119,7 +120,7 @@ public class MatchingManager : MonoBehaviour {
         Backend.Match.CreateMatchRoom();
 
         //매칭 시작
-        StaticManager.PopUpUI.PopUp("매칭을 시작합니다.",()=>{Backend.Match.RequestMatchMaking(MatchInfos[0].matchType, MatchInfos[0].matchModeType, MatchInfos[0].inDate);});
+        StaticManager.PopUpUI.PopUp("매칭을 시작합니다.",()=>{Backend.Match.RequestMatchMaking(matchInfos[0].matchType, matchInfos[0].matchModeType, matchInfos[0].inDate);});
     }
 
 
@@ -129,7 +130,7 @@ public class MatchingManager : MonoBehaviour {
     //--------------------------------------------------------------
     public void JoinGame(MatchMakingResponseEventArgs args) {
         var serverAddress = args.RoomInfo.m_inGameServerEndPoint.m_address;
-        varserverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
+        var serverPort = args.RoomInfo.m_inGameServerEndPoint.m_port;
         var roomToken = args.RoomInfo.m_inGameRoomToken;
 
         // 인게임 서버 접속
@@ -141,12 +142,12 @@ public class MatchingManager : MonoBehaviour {
 
 
     //--------------------------------------------------------------
-    // 메소드명 : IncreaseScore(string name, int score)
+    // 메소드명 : IncreaseTeamScore(string name, int score)
     // 설명 : 미니게임 끝낸 사람의 점수를 업데이트 시키기.
     //--------------------------------------------------------------
-    public void IncreaseScore(string name, int score) {
+    public void IncreaseTeamScore(string name, int score) {
         string msg = name + "|" + score;            // NKYL|200 형태로 보냄.
-        data = Encoding.ASCII.GetBytes(msg);        // 바이너리 데이터 화.
+        var data = Encoding.UTF8.GetBytes(msg);        // 바이너리 데이터 화.
         Backend.Match.SendDataToInGameRoom(data);        
     }
 
@@ -169,18 +170,19 @@ public class MatchingManager : MonoBehaviour {
                     break;
                 default: 
                     StaticManager.PopUpUI.PopUp("매칭 실패");
+                    break;
             }
         };
         Backend.Match.OnSessionJoinInServer += (args) => {
             Debug.Log("인게임 서버 접속 성공.");
             // 매칭 유저 정보 초기화
-            matchedUserDatas.clear();
+            matchedUserDatas.Clear();
         };
         // 처음 게임방에 접속했을 때 호출되는 이벤트
         // 현재 접속된 유저의 정보 수신하고 리스트에 정리
         Backend.Match.OnSessionListInServer += (args) => {
             // 현재 접속된 유저 정보 리스트로 데꼬옴
-            foreach (var member in args.GameRecord)  { 
+            foreach (var member in args.GameRecords)  { 
                 MatchedUserData matchedUserData = new MatchedUserData();
                 matchedUserData.id = member.m_nickname;
                 matchedUserData.score = 0;
@@ -202,8 +204,8 @@ public class MatchingManager : MonoBehaviour {
             
             if(!foundItem){
                 MatchedUserData matchedUserData = new MatchedUserData();
-                matchedUserData.Id = args.GameRecord.m_nickname;
-                matchedUserData.Score = 0;
+                matchedUserData.id = args.GameRecord.m_nickname;
+                matchedUserData.score = 0;
                 matchedUserDatas.Add(matchedUserData);
             } else {
                 Debug.Log("같은 닉네임이 존재해요!");
@@ -214,7 +216,7 @@ public class MatchingManager : MonoBehaviour {
             //정렬
             var sortedList = matchedUserDatas.OrderBy(member => member.id).ToList();
             // 원래 리스트 비우고 재정의
-            matchedUserDatas.clear();
+            matchedUserDatas.Clear();
             matchedUserDatas.AddRange(sortedList);
             // 팀 정의
             for (int i = 0; i < matchedUserDatas.Count; i++) {
@@ -225,15 +227,16 @@ public class MatchingManager : MonoBehaviour {
                 }
             }
 
-            StaticManager.PopUpUI.PopUp("매칭 끝! 게임 시작", ()=>{SceneLoader.LoadScene(nowMatchInfo.title);}); 
+            StaticManager.PopUpUI.PopUp("매칭 끝! 게임 시작", ()=>{SceneLoader.LoadScene("InGameScene");}); 
         };
         // 바이너리 데이터 처리
         Backend.Match.OnMatchRelay += (args) => {
             // 역인코딩
-            string str = ByteArrayToString(args.BinaryUserData, Encoding.ASCII);
+            string str;
+            str = Encoding.UTF8.GetString(args.BinaryUserData);
             
             // 문자열 나누기(아마 NKYL|200 이런 식으로 문자 보낼 예정)
-            string[] parts = input.Split('|');
+            string[] parts = str.Split('|');
 
             // 점수 갱신(누가 미니게임 끝내고 서버로 점수 뿌렸을 때, 이를 받아 인게임 씬의 화면에 갱신시키기)
             foreach (var currentMember in matchedUserDatas)  { 
@@ -242,11 +245,11 @@ public class MatchingManager : MonoBehaviour {
                     break;
                 }
             }
-            InGameSceneManager.Instance.UpdateScoreBoard();   // 솔직히 이거, 누가 미니게임 도중이라 InGameSceneManager의 Instance가 비워져 있으면 어떻게될지 모르겠음;;
+            InGameSceneManager.Instance.UpdateScoreBoard();   
         };
         // 채팅 메시지 핸들러
         Backend.Match.OnMatchChat = (MatchChatEventArgs args) => {
-            InGameSceneManager.Instance.UpdateChat(args.Message);   // 솔직히 이거, 누가 미니게임 도중이라 InGameSceneManager의 Instance가 비워져 있으면 어떻게될지 모르겠음;;
+            InGameSceneManager.Instance.UpdateChat(args.Message);  
         };
         Backend.Match.OnMatchResult += (args) => {
             // 매치 마무리.

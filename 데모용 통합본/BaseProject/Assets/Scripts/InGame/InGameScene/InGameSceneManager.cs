@@ -12,6 +12,7 @@
 // - 염민규(2023-05-21) : StartTimer() 추가
 // - 이수민(2023-05-24) : StartTimer() 마이너 변경
 // - 이수민(2023-05-24) : SendChat()/UpdateScoreBoard()/UpdateChat() 추가
+// - 이수민(2023-05-30) : 채팅창/인게임 점수판 임시 UI 작업
 //--------------------------------------------------------------
 
 
@@ -24,6 +25,8 @@ using Mapbox.Unity.MeshGeneration.Factories;
 using Mapbox.Unity.Utilities;
 using System.Collections.Generic;
 using System.IO;
+using BackEnd;
+using BackEnd.Tcp;
 using UnityEngine.Networking;
 
 public class InGameSceneManager : MonoBehaviour
@@ -47,6 +50,8 @@ public class InGameSceneManager : MonoBehaviour
     //--------------------------------------------------------------
     [SerializeField] GameObject _InGameSceneUI_User;
     [SerializeField] AbstractMap _map;
+    [SerializeField] InputField msgbox;
+    [SerializeField] Text chatbox;
 
     [System.Serializable]
     public class MissionDataWrapper {
@@ -110,7 +115,6 @@ public class InGameSceneManager : MonoBehaviour
             while (!www.isDone) { }
             jsonString = www.downloadHandler.text;
         }else {
-            // Android 이외의 플랫폼에서는 File 클래스를 사용하여 파일을 읽어옵니다.
             jsonString = File.ReadAllText(filePath);
         }   
 
@@ -217,20 +221,18 @@ public class InGameSceneManager : MonoBehaviour
     // - 채팅 보내기 버튼 누르면 발송.
     //--------------------------------------------------------------
     public void SendChat() {
-        string str = msgbox; // 화면 내 메시지 박스에서 값 긁어오기.
-        string msg = StaticManager.PlayerData.userData.nickname + " : " + str; // 대충 "NKYL : 안녕하세요" 이런 느낌이 될 것.
+        string str;
+        str = msgbox.GetComponent<InputField>().text;   // 화면 내 메시지 박스에서 값 긁어오기.
+        string msg = StaticManager.PlayerData.userData.nickname + " : " + str + "\n"; // 대충 "NKYL : 안녕하세요\n" 이런 느낌이 될 것.
         Backend.Match.ChatToGameRoom(MatchChatModeType.All, msg);
     }
 
 
     //--------------------------------------------------------------
     // 메소드명 : UpdateChat(string msg)
-    // 설명 : MM에서 받아온 msg를 화면에 띄우는 역할.
-    // 수정 :
-    // - 이수민(2023-05-24) : Timer가 false일 때만 동작하도록 변경. 혹시 나중에 기능 추가할 수 있으니
+    // 설명 : MM에서 받아온 msg를 채팅창에 띄우는 역할.
     //--------------------------------------------------------------
     public void UpdateChat(string msg) {
-        // 날아온 msg를 채팅창 텍스트박스에 추가시키기.
-        // 앞에 \n다는거 잊지 말기!
+        chatbox.text += msg;
     }
 }
