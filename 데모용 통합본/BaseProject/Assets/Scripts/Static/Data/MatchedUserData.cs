@@ -16,7 +16,7 @@ using BackEnd;
 
 public class MatchedUserData
 {
-    public string id;        // 사용자 ID
-    public int score;        // 점수
-    public string team;
+    public string id = "ID 받아오기 오류";        // 사용자 ID
+    public int score = 0;        // 점수
+    public string team = "NULL";
 }

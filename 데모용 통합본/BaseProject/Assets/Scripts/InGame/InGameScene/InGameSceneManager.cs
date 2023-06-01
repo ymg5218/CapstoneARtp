@@ -52,6 +52,8 @@ public class InGameSceneManager : MonoBehaviour
     [SerializeField] AbstractMap _map;
     [SerializeField] InputField msgbox;
     [SerializeField] Text chatbox;
+    [SerializeField] Text redTeamBox;
+    [SerializeField] Text blueTeamBox;
 
     [System.Serializable]
     public class MissionDataWrapper {
@@ -209,9 +211,18 @@ public class InGameSceneManager : MonoBehaviour
     // - 점수판 업데이트
     //--------------------------------------------------------------
     public void UpdateScoreBoard() {
-        // foreach문으로 MM리스트 순회
-        // IF RED -> ID : 점수 형태로 가공해서 점수판 텍스트박스에 추가하기
-        // IF BLUE -> ID : 점수 형태로 가공해서 점수판 텍스트박스에 추가하기
+        redTeamBox.text = "";
+        blueTeamBox.text = "";
+
+        foreach (var teamMember in StaticManager.Matching.matchedUserDatas)  { 
+            if (teamMember.team == "RED") {
+                string str = teamMember.id + " : " + teamMember.score + "\n"
+                redTeamBox.text += str;
+            } else if (teamMember.team == "BLUE") {
+                string str = teamMember.id + " : " + teamMember.score + "\n"
+                blueTeamBox.text += str;
+            }
+        }
     }
 
 
