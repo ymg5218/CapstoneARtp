@@ -19,4 +19,16 @@ public class MatchedUserData
     public string id = "ID 받아오기 오류";        // 사용자 ID
     public int score = 0;        // 점수
     public string team = "NULL";
+
+    //--------------------------------------------------------------
+    // 메소드명 : ToString()
+    // 설명 : 디버깅용 메소드(Debug.log(~~~))
+    //--------------------------------------------------------------
+    public override string ToString() {
+        StringBuilder result = new StringBuilder();
+        result.AppendLine($"ID : {id}");
+        result.AppendLine($"score : {score}");
+        
+        return result.ToString();
+    }
 }

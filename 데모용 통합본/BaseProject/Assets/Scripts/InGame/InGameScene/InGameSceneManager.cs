@@ -85,7 +85,9 @@ public class InGameSceneManager : MonoBehaviour
         SetUIComponent();       // 인게임 UI 세팅 메소드.
         SpawnMissionObjects();  // 미션 오브젝트 생성
         StartTimer();           // 타이머 시작 23/05/21 민규 추가
+        UpdateScoreBoard();     // 유저 정보 갱신.
     }
+
 
 
     //--------------------------------------------------------------
@@ -211,15 +213,15 @@ public class InGameSceneManager : MonoBehaviour
     // - 점수판 업데이트
     //--------------------------------------------------------------
     public void UpdateScoreBoard() {
-        redTeamBox.text = "";
-        blueTeamBox.text = "";
+        redTeamBox.text = "[RED 팀]\n";
+        blueTeamBox.text = "[BLUE 팀]\n";
 
         foreach (var teamMember in StaticManager.Matching.matchedUserDatas)  { 
             if (teamMember.team == "RED") {
-                string str = teamMember.id + " : " + teamMember.score + "\n"
+                string str = teamMember.id + " : " + teamMember.score + "\n";
                 redTeamBox.text += str;
             } else if (teamMember.team == "BLUE") {
-                string str = teamMember.id + " : " + teamMember.score + "\n"
+                string str = teamMember.id + " : " + teamMember.score + "\n";
                 blueTeamBox.text += str;
             }
         }

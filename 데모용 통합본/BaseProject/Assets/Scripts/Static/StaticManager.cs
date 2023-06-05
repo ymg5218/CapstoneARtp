@@ -8,11 +8,13 @@
 // 수정 :
 // - 이수민(2023-04-09) : 기존에 산발적이던 싱글턴 통합.
 // - 이수민(2023-04-17) : MinigameDataManager 추가
+// - 이수민(2023-06-05) : BackendManager 통합/MatchingManager 로그인 이후 초기화.
 //--------------------------------------------------------------
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BackEnd;
 
 public class StaticManager : MonoBehaviour
 {
@@ -29,7 +31,6 @@ public class StaticManager : MonoBehaviour
     //--------------------------------------------------------------
     public static StaticManager Instance { get; private set; }
 
-    public static BackendManager Backend { get; private set; }
     public static PopUpUIManager PopUpUI { get; private set; }
     public static PlayerDataManager PlayerData { get; private set; }
     public static MinigameDataManager MinigameData { get; private set; }
@@ -57,18 +58,32 @@ public class StaticManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(this.gameObject);
 
-        Backend = GetComponentInChildren<BackendManager>();
+        var bro = Backend.Initialize(true); // 뒤끝 초기화
+        if (bro.IsSuccess()) {
+            Debug.Log("초기화 성공 : " + bro); // 성공일 경우 statusCode 204 Success
+        } else {
+            Debug.LogError("초기화 실패 : " + bro); // 실패일 경우 statusCode 400대 에러 발생 
+        }
+
         PopUpUI = GetComponentInChildren<PopUpUIManager>();
         PlayerData = GetComponentInChildren<PlayerDataManager>();
         MinigameData = GetComponentInChildren<MinigameDataManager>();
-        Matching = GetComponentInChildren<MatchingManager>();
         Timer = GetComponentInChildren<IngameTimerManager>();
 
-        Backend.Init();
         PopUpUI.Init();
         PlayerData.Init();
         MinigameData.Init();
-        Matching.Init();
         Timer.Init();
+    }
+    //--------------------------------------------------------------
+    // 메소드명 : MatchingInit()
+    // 설명 : 
+    // - 로그인 이후 매칭이 초기화되야 해서 만든 메소드.
+    // - 구성상 아름답지 않은건 알지만...
+    //--------------------------------------------------------------
+    public void MatchingInit() {
+        Debug.Log("매칭 연결시도");
+        Matching = GetComponentInChildren<MatchingManager>();
+        Matching.Init();
     }
 }

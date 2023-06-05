@@ -567,7 +567,6 @@
      <Compile Include="Assets\Scripts\Static\Func\Dispatcher.cs" />
      <Compile Include="Assets\Scripts\Static\Func\SceneLoader.cs" />
      <Compile Include="Assets\Scripts\Static\StaticManager.cs" />
-     <Compile Include="Assets\Scripts\Static\StaticManagers\BackendManager.cs" />
      <Compile Include="Assets\Scripts\Static\StaticManagers\IngameTimerManager.cs" />
      <Compile Include="Assets\Scripts\Static\StaticManagers\MatchingManager.cs" />
      <Compile Include="Assets\Scripts\Static\StaticManagers\MinigameDataManager.cs" />

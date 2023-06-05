@@ -6,6 +6,7 @@
 // 수정:
 // - 이수민(2023-04-07) - 문서화 작업, 마이너한 기능 추가.
 // - 이수민(2023-04-07) - Start() 제거
+// - 이수민(2023-06-05) : StaticManager의 Matching 동작시킴.
 //--------------------------------------------------------------
 
 
@@ -55,9 +56,17 @@ public class MainSceneManager : MonoBehaviour
         SetUIUser(); // 유저 정보 세팅
         SetUIMainButton(); // 메인 버튼 세팅
         SetUISideButton(); // 사이드버튼(일단은 속성밖에 없지만) 세팅
+        MatchingInit();           // 매칭 Init
     }
 
 
+    //--------------------------------------------------------------
+    // 메소드명 : MatchingInit()
+    // 설명 : 매칭 Init
+    //--------------------------------------------------------------
+    void MatchingInit() {
+        StaticManager.Instance.MatchingInit();
+    }
 
     //--------------------------------------------------------------
     // 메소드명 : SetUIUser()
@@ -132,7 +141,8 @@ public class MainSceneManager : MonoBehaviour
     // - Settings : 세팅 버튼, 나중에 플레이어 정보 수정을 수행할 예정.
     //--------------------------------------------------------------
     private void GameStart(){
-        StaticManager.PopUpUI.PopUp("매칭?",()=>{Static.Matching.MatchingProcess();});
+        Debug.Log("여긴가?");
+        StaticManager.Matching.MatchingProcess();
     }
     private void Shop(){
     }
