@@ -248,4 +248,12 @@ public class InGameSceneManager : MonoBehaviour
     public void UpdateChat(string msg) {
         chatbox.text += msg;
     }
+
+    //--------------------------------------------------------------
+    // 메소드명 : Temp_UpdateScore()
+    // 설명 : 디버깅용 메소드. 미니게임 완료했다 "치고" 점수 알라가는 거 확인.
+    //--------------------------------------------------------------
+    public void Temp_UpdateScore() {
+        StaticManager.Matching.IncreaseTeamScore(StaticManager.PlayerData.userData.nickname, 200);
+    }
 }

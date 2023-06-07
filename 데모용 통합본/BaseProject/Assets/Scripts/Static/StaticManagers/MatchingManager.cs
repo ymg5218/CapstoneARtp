@@ -154,8 +154,10 @@ public class MatchingManager : MonoBehaviour {
     // 설명 : 미니게임 끝낸 사람의 점수를 업데이트 시키기.
     //--------------------------------------------------------------
     public void IncreaseTeamScore(string name, int score) {
+        Debug.Log("전송 시도 :" + name + "|" + score);
         string msg = name + "|" + score;            // NKYL|200 형태로 보냄.
         var data = Encoding.UTF8.GetBytes(msg);        // 바이너리 데이터 화.
+        Debug.Log("인코딩 처리 :" + data);
         Backend.Match.SendDataToInGameRoom(data);        
     }
 
@@ -252,17 +254,20 @@ public class MatchingManager : MonoBehaviour {
         };
         // 바이너리 데이터 처리
         Backend.Match.OnMatchRelay += (args) => {
-            // 역인코딩
+            Debug.Log("바이너리 데이터 획득");
+
             string str;
             str = Encoding.UTF8.GetString(args.BinaryUserData);
             
+            Debug.Log("얻어낸 정보");
+
             // 문자열 나누기(아마 NKYL|200 이런 식으로 문자 보낼 예정)
             string[] parts = str.Split('|');
 
             // 점수 갱신(누가 미니게임 끝내고 서버로 점수 뿌렸을 때, 이를 받아 인게임 씬의 화면에 갱신시키기)
             foreach (var currentMember in matchedUserDatas)  { 
                 if (currentMember.id == parts[0]) {
-                    currentMember.score += int.Parse(parts[2]);
+                    currentMember.score += int.Parse(parts[1]);
                     break;
                 }
             }
