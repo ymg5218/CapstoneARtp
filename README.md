@@ -1,7 +1,7 @@
 # CapstoneARtp
  
 한국공대 2023년 캡스톤디자인 - Tukorea_Augmented Reality Edition\
-개발 인원 : 황찬욱 이수민 염민규 박영훈
+개발 인원 : 이수민 염민규 박영훈
  
 ### 개요
  

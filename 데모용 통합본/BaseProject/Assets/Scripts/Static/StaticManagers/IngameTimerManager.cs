@@ -26,7 +26,13 @@ public class IngameTimerManager : MonoBehaviour
         // 인 게임 접근시, IngameSceneManager를 통해 isTimerStart를 true로 바꾸어주어, 해당 시점부터 카운트다운 시작
         if (isTimerStart == true)
         {
-            LimitTime -= Time.deltaTime;
+            if(LimitTime <= 0){
+                isTimerStart = false;
+                InGameSceneManager.Instance.EndGame();
+            }
+            else{
+                LimitTime -= Time.deltaTime;
+            }
         }
 
     }

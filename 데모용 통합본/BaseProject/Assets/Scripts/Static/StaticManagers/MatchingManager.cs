@@ -6,6 +6,7 @@
 // 수정:
 // - 이수민(2023-05-12) : 세부적인 구조 설계
 // - 이수민(2023-05-14) : 세부 구조 구현 중간단계
+// - 이수민(2023-06-16) : 타이밍 맞추기용 코루틴 함수 추가
 //--------------------------------------------------------------
 
 
@@ -13,6 +14,7 @@ using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using BackEnd;
 using BackEnd.Tcp;
@@ -24,10 +26,12 @@ public class MatchingManager : MonoBehaviour {
     // 변수 리스트 :
     // <내부 변수> :
     // - errorInfo : 이벤트 처리 결과값 저장용 변수
+    // - isSceneActive : 현재 인게임 씬이 동작중인가???
     // - matchInfos : 서버에서 생성된 매치 데이터 저장용 리스트.
     // - matchedUserDatas : 현재 매칭된 인원 데이터 저장용 리스트
     //--------------------------------------------------------------
     ErrorInfo errorInfo;
+    public bool isSceneActive = false;
     public List<MatchInfo> matchInfos = new List<MatchInfo>();  
     public List<MatchedUserData> matchedUserDatas = new List<MatchedUserData>();
     public MatchedServerData matchedServerData = new MatchedServerData();
@@ -250,6 +254,7 @@ public class MatchingManager : MonoBehaviour {
                 }
             }
             Debug.Log("아니면 여기?");
+            isSceneActive = true;
             SceneLoader.LoadScene("InGameScene"); 
         };
         // 바이너리 데이터 처리
@@ -271,15 +276,37 @@ public class MatchingManager : MonoBehaviour {
                     break;
                 }
             }
-            InGameSceneManager.Instance.UpdateScoreBoard();   
+            
+            StartCoroutine(WaitForSceneActivation("InGameScene"));
         };
         // 채팅 메시지 핸들러
         Backend.Match.OnMatchChat = (MatchChatEventArgs args) => {
-            InGameSceneManager.Instance.UpdateChat(args.Message);  
+            if (SceneManager.GetActiveScene().name == "InGameScene") {
+                InGameSceneManager.Instance.UpdateChat(args.Message);  
+            }
         };
         Backend.Match.OnMatchResult += (args) => {
             // 매치 마무리.
             // 여기서는 뭘 해야 하지??
         };
+    }
+
+
+    //--------------------------------------------------------------
+    // 메소드명 : WaitForSceneActivation()
+    // 설명 : 인게임 씬이 동작할 때까지 기다리게 만드는 함수.
+    //--------------------------------------------------------------
+    private IEnumerator WaitForSceneActivation(String sceneName)
+    {
+        while (!isSceneActive)
+        {
+            if (SceneManager.GetActiveScene().name == sceneName)
+            {
+                isSceneActive = true;
+                InGameSceneManager.Instance.UpdateScoreBoard();
+            }
+
+            yield return null;
+        }
     }
 }

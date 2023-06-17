@@ -1,23 +1,37 @@
 {
     "missions" : [
         {
-            "sceneName" : "ShootingGameScene",
+            "sceneName" : "Hoop",
             "latitude": 37.339642,
             "longitude": 126.734515,
             "scale": 4,
-            "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle 2"
+            "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle"
         },
         {
-            "sceneName" : "CarGameScene",
+            "sceneName" : "Car",
             "latitude": 37.340028,
             "longitude": 126.734696,
             "scale": 4,
-            "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle 2"
+            "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle"
         },
         {
-            "sceneName" : "BasketballGameScene",
+            "sceneName" : "Balloon",
             "latitude": 37.339836,
             "longitude": 126.734651,
+            "scale": 4,
+            "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle"
+        },
+        {
+            "sceneName" : "ARface",
+            "latitude": 37.339876,
+            "longitude": 126.734851,
+            "scale": 4,
+            "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle"
+        },
+        {
+            "sceneName" : "Spider",
+            "latitude": 37.339436,
+            "longitude": 126.734451,
             "scale": 4,
             "prefabPath": "ThirdParty/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle"
         }

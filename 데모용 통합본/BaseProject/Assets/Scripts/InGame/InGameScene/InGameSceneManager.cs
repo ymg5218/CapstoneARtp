@@ -188,7 +188,10 @@ public class InGameSceneManager : MonoBehaviour
     void OnMissionObjectTouched(int index) {
         if (index >= 0 && index < _missions.Count) {
             var mission = _missions[index];
-            StaticManager.PopUpUI.YesOrNoPopUp("선택된 미션은 비매칭 미션으로\n"+mission.sceneName+"에요. 미션을 플레이 하실건가요?",()=>{SceneLoader.LoadScene(mission.sceneName);}, ()=>{});
+            StaticManager.PopUpUI.YesOrNoPopUp("선택된 미션은 비매칭 미션으로\n"+mission.sceneName+"에요. 미션을 플레이 하실건가요?",()=>{
+                StaticManager.Matching.isSceneActive = false;
+                SceneLoader.LoadScene(mission.sceneName);
+            }, ()=>{});
         } else {
             StaticManager.PopUpUI.PopUp("미션 인덱스 관련해서 오류가 터졌어요.\n어디가 잘못된건지 얼른 찾아보세요!");
         }
@@ -247,6 +250,37 @@ public class InGameSceneManager : MonoBehaviour
     //--------------------------------------------------------------
     public void UpdateChat(string msg) {
         chatbox.text += msg;
+    }
+
+    //--------------------------------------------------------------
+    // 메소드명 : EndGame()
+    // 설명 : 타이머 끝나면 타이머 클래스에서 호출 -> 현재 팀별 점수에 따라 승패 지정.
+    //--------------------------------------------------------------
+    public void EndGame() {
+        string str = "";
+        int redTeamScore = 0;
+        int blueTeamScore = 0;
+
+        foreach (var teamMember in StaticManager.Matching.matchedUserDatas)  { 
+            if (teamMember.team == "RED") {
+                redTeamScore += teamMember.score;
+            } else if (teamMember.team == "BLUE") {
+                blueTeamScore += teamMember.score;
+            }
+        }
+
+        if (redTeamScore > blueTeamScore) {
+            str += "레드팀 승리!\n";
+        } else if (redTeamScore < blueTeamScore) {
+            str += "블루팀 승리!\n";
+        } else if (redTeamScore == blueTeamScore) {
+            str += "무승부!\n";
+        }
+
+        str += "레드팀 총 점수 : " + redTeamScore + "\n";
+        str += "블루팀 총 점수 : " + blueTeamScore + "\n";
+
+        StaticManager.PopUpUI.PopUp(str,()=>{SceneLoader.LoadScene("MainScene");});
     }
 
     //--------------------------------------------------------------

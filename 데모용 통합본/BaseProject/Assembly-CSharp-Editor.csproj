@@ -155,6 +155,7 @@
      <Compile Include="Assets\Mapbox SDK\ThirdPartyAssets\WoLfulus\LineEnding\Editor\FileMonitor.cs" />
      <Compile Include="Assets\Mapbox SDK\ThirdPartyAssets\WoLfulus\LineEnding\Editor\LogEntries.cs" />
      <Compile Include="Assets\Mapbox SDK\ThirdPartyAssets\WoLfulus\LineEnding\Editor\LogEntry.cs" />
+     <Compile Include="Assets\MinigameProjects\Car\Plugins\Editor\VSCode.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
