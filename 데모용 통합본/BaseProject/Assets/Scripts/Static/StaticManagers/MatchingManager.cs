@@ -31,7 +31,6 @@ public class MatchingManager : MonoBehaviour {
     // - matchedUserDatas : 현재 매칭된 인원 데이터 저장용 리스트
     //--------------------------------------------------------------
     ErrorInfo errorInfo;
-    public bool isSceneActive = false;
     public List<MatchInfo> matchInfos = new List<MatchInfo>();  
     public List<MatchedUserData> matchedUserDatas = new List<MatchedUserData>();
     public MatchedServerData matchedServerData = new MatchedServerData();
@@ -254,7 +253,6 @@ public class MatchingManager : MonoBehaviour {
                 }
             }
             Debug.Log("아니면 여기?");
-            isSceneActive = true;
             SceneLoader.LoadScene("InGameScene"); 
         };
         // 바이너리 데이터 처리
@@ -277,7 +275,10 @@ public class MatchingManager : MonoBehaviour {
                 }
             }
             
-            StartCoroutine(WaitForSceneActivation("InGameScene"));
+            if (SceneManager.GetActiveScene().name == "InGameScene")
+            {
+                InGameSceneManager.Instance.UpdateScoreBoard();
+            }
         };
         // 채팅 메시지 핸들러
         Backend.Match.OnMatchChat = (MatchChatEventArgs args) => {
@@ -289,24 +290,5 @@ public class MatchingManager : MonoBehaviour {
             // 매치 마무리.
             // 여기서는 뭘 해야 하지??
         };
-    }
-
-
-    //--------------------------------------------------------------
-    // 메소드명 : WaitForSceneActivation()
-    // 설명 : 인게임 씬이 동작할 때까지 기다리게 만드는 함수.
-    //--------------------------------------------------------------
-    private IEnumerator WaitForSceneActivation(String sceneName)
-    {
-        while (!isSceneActive)
-        {
-            if (SceneManager.GetActiveScene().name == sceneName)
-            {
-                isSceneActive = true;
-                InGameSceneManager.Instance.UpdateScoreBoard();
-            }
-
-            yield return null;
-        }
     }
 }

@@ -188,10 +188,7 @@ public class InGameSceneManager : MonoBehaviour
     void OnMissionObjectTouched(int index) {
         if (index >= 0 && index < _missions.Count) {
             var mission = _missions[index];
-            StaticManager.PopUpUI.YesOrNoPopUp("선택된 미션은 비매칭 미션으로\n"+mission.sceneName+"에요. 미션을 플레이 하실건가요?",()=>{
-                StaticManager.Matching.isSceneActive = false;
-                SceneLoader.LoadScene(mission.sceneName);
-            }, ()=>{});
+            StaticManager.PopUpUI.YesOrNoPopUp("선택된 미션은 비매칭 미션으로\n"+mission.sceneName+"에요. 미션을 플레이 하실건가요?",()=>{SceneLoader.LoadScene(mission.sceneName);}, ()=>{});
         } else {
             StaticManager.PopUpUI.PopUp("미션 인덱스 관련해서 오류가 터졌어요.\n어디가 잘못된건지 얼른 찾아보세요!");
         }
